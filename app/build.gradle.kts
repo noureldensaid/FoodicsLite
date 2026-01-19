@@ -82,7 +82,7 @@ dependencies {
     implementation(libs.kotlinx.serialization)
 
 
-    implementation(project(":network"))
     implementation(project(":core:ui"))
-    implementation(project(":navigation"))
+    implementation(project(":core:navigation"))
+    implementation(project(":core:network"))
 }
