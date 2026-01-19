@@ -21,4 +21,12 @@ dependencyResolutionManagement {
 
 rootProject.name = "Foodics Lite"
 include(":app")
- 
+include(":core:common")
+include(":network")
+include(":database")
+include(":core:ui")
+include(":navigation")
+include(":feature:tables:ui")
+include(":feature:menu:ui")
+include(":feature:orders:ui")
+include(":feature:settings:ui")

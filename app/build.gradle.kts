@@ -2,7 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.kotlin.serialization)
-    alias(libs.plugins.kotlin.parcelize)
+//    alias(libs.plugins.kotlin.parcelize)
 }
 
 android {
@@ -38,6 +38,7 @@ android {
     }
 
     buildFeatures {
+        buildConfig = true
         compose = true
     }
 }
@@ -54,9 +55,9 @@ dependencies {
     implementation(libs.androidx.material3.window.size)
 
     // UI: Images & Animations
-    implementation(libs.coil.kt.coil.compose)
-    implementation(libs.coil.gif)
-    implementation(libs.lottie.compose)
+//    implementation(libs.coil.kt.coil.compose)
+//    implementation(libs.coil.gif)
+//    implementation(libs.lottie.compose)
 
     // DI
     implementation(libs.bundles.koin)
@@ -78,5 +79,9 @@ dependencies {
     debugImplementation(libs.library)
     releaseImplementation(libs.library.no.op)
 
+    implementation(libs.kotlinx.serialization)
 
+
+    implementation(project(":network"))
+    implementation(project(":navigation"))
 }
