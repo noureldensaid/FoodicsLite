@@ -19,23 +19,23 @@ enum class BottomAppBarItem(
     Tables(
         route = TablesRoute,
         title = R.string.tables,
-        icon = R.drawable.ic_bottom_bar_home
+        icon = R.drawable.ic_tables_bottom_bar
     ),
     Orders(
         route = OrdersRoute,
         title = R.string.orders,
-        icon = R.drawable.ic_bottom_bar_home
+        icon = R.drawable.ic_orders_bottom_bar
     ),
     Menu(
         route = MenuRoute,
         title = R.string.menu,
-        icon = R.drawable.ic_bottom_bar_home,
+        icon = R.drawable.ic_menu_bottom_bar,
         badgeAmount = mutableIntStateOf(0)
     ),
     Settings(
         route = SettingsRoute,
         title = R.string.settings,
-        icon = R.drawable.ic_bottom_bar_home
+        icon = R.drawable.ic_settings_bottom_bar
     );
 
     companion object {
