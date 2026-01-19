@@ -12,10 +12,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.foodics.core.navigation.AppNavGraph
+import com.foodics.core.navigation.BottomAppBar
+import com.foodics.core.navigation.BottomAppBarItem
 import com.foodics.core.ui.theme.FoodicsLiteTheme
-import com.foodics.navigation.AppNavGraph
-import com.foodics.navigation.BottomAppBar
-import com.foodics.navigation.BottomAppBarItem
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
