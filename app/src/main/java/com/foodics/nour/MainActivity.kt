@@ -7,15 +7,15 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.foodics.core.ui.theme.FoodicsLiteTheme
 import com.foodics.navigation.AppNavGraph
 import com.foodics.navigation.BottomAppBar
 import com.foodics.navigation.BottomAppBarItem
-import com.foodics.nour.ui.theme.FoodicsLiteTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,7 +32,7 @@ class MainActivity : ComponentActivity() {
             FoodicsLiteTheme {
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
-                    containerColor = Color.White,
+                    containerColor = MaterialTheme.colorScheme.background,
                     content = { innerPadding ->
                         AppNavGraph(
                             modifier = Modifier

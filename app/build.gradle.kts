@@ -83,5 +83,6 @@ dependencies {
 
 
     implementation(project(":network"))
+    implementation(project(":core:ui"))
     implementation(project(":navigation"))
 }

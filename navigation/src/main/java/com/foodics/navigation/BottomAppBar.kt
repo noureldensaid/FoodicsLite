@@ -1,13 +1,13 @@
 package com.foodics.navigation
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -21,11 +21,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.foodics.core.ui.extensions.conditional
 import com.foodics.core.ui.extensions.noRippleClickable
 
 @Composable
@@ -37,45 +37,48 @@ fun BottomAppBar(
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
     NavigationBar(
-        modifier = Modifier.padding(horizontal = 16.dp),
-        containerColor = Color.White,
+        modifier = Modifier.fillMaxWidth(),
+        containerColor = MaterialTheme.colorScheme.background,
     ) {
-        tabList.forEach { navItem ->
-            val isSelected = currentRoute == navItem.route.getRoute()
-            key(navItem.route.getRoute()) {
-                Row(
-                    modifier = Modifier
-                        .wrapContentSize()
-                        .weight(if (isSelected) 1f else 0.5f)
-                        .background(
-                            color = if (isSelected) Color.Blue else Color.White,
-                            shape = RoundedCornerShape(16.dp)
-                        )
-                        .conditional(isSelected) { padding(top = 8.dp, bottom = 8.dp) }
-                        .noRippleClickable {
-                            navController.navigate(navItem.route) {
-                                popUpTo(navController.graph.findStartDestination().id) {
-                                    saveState = true
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            tabList.forEach { navItem ->
+                val isSelected = currentRoute == navItem.route.getRoute()
+
+                key(navItem.route.getRoute()) {
+                    Column(
+                        modifier = Modifier
+                            .weight(1f)
+                            .noRippleClickable {
+                                navController.navigate(navItem.route) {
+                                    popUpTo(navController.graph.findStartDestination().id) {
+                                        saveState = true
+                                    }
+                                    launchSingleTop = true
+                                    restoreState = true
                                 }
-                                launchSingleTop = true
-                                restoreState = true
                             }
-                        }
-                        .padding(
-                            horizontal = if (isSelected) 20.dp else 0.dp,
-                            vertical = 12.dp,
-                        ),
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    Icon(
-                        modifier = Modifier.size(if (isSelected) 16.dp else 24.dp),
-                        imageVector = ImageVector.vectorResource(navItem.icon),
-                        tint = if (isSelected) Color.Blue else Color.Gray,
-                        contentDescription = null,
-                    )
-                    AnimatedVisibility(isSelected) {
+                            .padding(vertical = 8.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.spacedBy(4.dp, Alignment.CenterVertically)
+                    ) {
+                        val tint =
+                            if (isSelected) MaterialTheme.colorScheme.onBackground else Color.Gray
+
+                        Icon(
+                            imageVector = ImageVector.vectorResource(navItem.icon),
+                            contentDescription = null,
+                            tint = tint,
+                            modifier = Modifier.size(24.dp)
+                        )
                         Text(
                             text = stringResource(navItem.title),
+                            color = tint,
+                            maxLines = 1,
+                            fontSize = 12.sp,
                         )
                     }
                 }
