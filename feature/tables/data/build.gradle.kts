@@ -1,11 +1,15 @@
 plugins {
     alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
-    namespace = "com.foodics.core.network"
-    compileSdk {
-        version = release(36)
+    namespace = "com.foodics.feature.tables.data"
+
+    compileSdk = 36
+
+    buildFeatures {
+        buildConfig = false
     }
 
     defaultConfig {
@@ -13,14 +17,6 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
 
-        buildFeatures {
-            buildConfig = true
-        }
-
-        defaultConfig {
-            buildConfigField("String", "BASE_URL", "\"https://my.api.mockaroo.com/\"")
-            buildConfigField("String", "API_KEY", "\"28085ae0\"")
-        }
     }
 
     buildTypes {
@@ -32,6 +28,7 @@ android {
             )
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
@@ -46,15 +43,13 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
-    implementation(libs.bundles.ktor)
-    implementation(libs.ktor.client.okhttp)
-
-    implementation(libs.timber)
-
-    debugImplementation(libs.library)
-    releaseImplementation(libs.library.no.op)
-
+    implementation(libs.kotlinx.serialization)
     implementation(libs.bundles.koin)
+    implementation(libs.bundles.ktor)
+    implementation(libs.bundles.room)
 
     implementation(project(":core:common"))
+    implementation(project(":core:network"))
+    implementation(project(":core:database"))
+    implementation(project(":feature:tables:domain"))
 }

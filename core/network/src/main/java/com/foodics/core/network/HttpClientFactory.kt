@@ -14,6 +14,7 @@ import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
+import io.ktor.client.request.header
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import io.ktor.http.userAgent
@@ -30,8 +31,6 @@ class HttpClientFactory(
     private val context: Context,
 ) {
 
-    private var baseUrl: String = ""
-
     private val okhttpEngine by lazy {
         OkHttp.create {
             config {
@@ -42,7 +41,6 @@ class HttpClientFactory(
                     addInterceptor(
                         ChuckerInterceptor.Builder(context)
                             .collector(ChuckerCollector(context))
-                            .createShortcut(false)
                             .build()
                     )
                 }
@@ -91,7 +89,8 @@ class HttpClientFactory(
             defaultRequest {
                 contentType(ContentType.Application.Json)
                 userAgent(userAgentContent)
-                url(baseUrl)
+                header("X-API-Key", BuildConfig.API_KEY)
+                url(BuildConfig.BASE_URL)
             }
         }
     }
