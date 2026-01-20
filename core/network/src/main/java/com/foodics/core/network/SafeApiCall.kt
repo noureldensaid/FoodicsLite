@@ -1,5 +1,7 @@
 package com.foodics.core.network
 
+import com.foodics.core.common.result.ResponseState
+import com.foodics.core.common.result.StatusJsonResponse
 import io.ktor.client.call.body
 import io.ktor.client.plugins.ResponseException
 import io.ktor.client.statement.HttpResponse
@@ -30,8 +32,12 @@ suspend inline fun <reified T> safeApiCall(crossinline apiCall: suspend () -> Ht
             is ResponseException -> handleHttpException(e)
             is UnknownHostException -> ResponseState.Error(NetworkError.NO_INTERNET_CONNECTION, null)
             is IOException -> ResponseState.Error(NetworkError.NO_INTERNET_CONNECTION, null)
-            is JsonConvertException -> ResponseState.Error(NetworkError.RESPONSE_PARSING_ERROR,StatusJsonResponse(-1, e.message) )
-            else -> ResponseState.Error(NetworkError.UNKNOWN_ERROR,   StatusJsonResponse(-1, e.message))
+            is JsonConvertException -> ResponseState.Error(NetworkError.RESPONSE_PARSING_ERROR,
+                StatusJsonResponse(-1, e.message)
+            )
+            else -> ResponseState.Error(NetworkError.UNKNOWN_ERROR,
+                StatusJsonResponse(-1, e.message)
+            )
         }
     }
 }

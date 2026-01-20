@@ -85,4 +85,10 @@ dependencies {
     implementation(project(":core:ui"))
     implementation(project(":core:navigation"))
     implementation(project(":core:network"))
+    implementation(project(":core:database"))
+
+    implementation(project(":feature:tables:data"))
+    implementation(project(":feature:tables:domain"))
+    implementation(project(":feature:tables:ui"))
+
 }

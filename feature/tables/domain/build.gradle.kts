@@ -3,24 +3,16 @@ plugins {
 }
 
 android {
-    namespace = "com.foodics.core.network"
+    namespace = "com.foodics.tables.domain"
     compileSdk {
         version = release(36)
     }
 
     defaultConfig {
         minSdk = 24
+
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
-
-        buildFeatures {
-            buildConfig = true
-        }
-
-        defaultConfig {
-            buildConfigField("String", "BASE_URL", "\"https://my.api.mockaroo.com/\"")
-            buildConfigField("String", "API_KEY", "\"28085ae0\"")
-        }
     }
 
     buildTypes {
@@ -42,19 +34,12 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
+
+    implementation(libs.koin.android)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-
-    implementation(libs.bundles.ktor)
-    implementation(libs.ktor.client.okhttp)
-
-    implementation(libs.timber)
-
-    debugImplementation(libs.library)
-    releaseImplementation(libs.library.no.op)
-
-    implementation(libs.bundles.koin)
 
     implementation(project(":core:common"))
 }
