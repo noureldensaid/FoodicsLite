@@ -5,7 +5,7 @@ import com.foodics.core.network.safeApiCall
 import com.foodics.tables.data.remote.model.CategoryRemoteDto
 import com.foodics.tables.data.remote.model.ProductRemoteDto
 import io.ktor.client.HttpClient
-import io.ktor.client.plugins.resources.get
+import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 
 class TablesRemoteDataSourceImpl(

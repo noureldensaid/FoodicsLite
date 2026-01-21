@@ -74,6 +74,7 @@ fun parseErrorMessage(statusCode: Int, errorBody: String?): StatusJsonResponse? 
             StatusJsonResponse(errorCode, errorMessage)
         }
     }.getOrElse {
+        Timber.tag("safeApiCall").d(it, "Error parsing error message: $it")
         StatusJsonResponse(statusCode, errorBody)
     }
 }

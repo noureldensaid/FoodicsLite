@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.ksp)
 }
 
 android {
@@ -46,8 +47,15 @@ dependencies {
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.bundles.compose)
     debugImplementation(libs.bundles.compose.debug)
-    implementation(libs.bundles.koin)
 
+    implementation(libs.bundles.koin)
+    ksp(libs.koin.ksp.compiler)
+
+    implementation(libs.kotlinx.collections.immutable)
     implementation(libs.kotlinx.serialization)
+
     implementation(project(":core:ui"))
+    implementation(project(":core:common"))
+    implementation(project(":feature:tables:domain"))
+
 }

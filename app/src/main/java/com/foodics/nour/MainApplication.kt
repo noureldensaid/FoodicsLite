@@ -3,6 +3,7 @@ package com.foodics.nour
 import android.app.Application
 import com.foodics.core.di.databaseModule
 import com.foodics.core.di.networkModule
+import com.foodics.feature.tables.ui.di.tablesUiModule
 import com.foodics.tables.data.di.tablesDataModule
 import com.foodics.tables.domain.di.tablesDomainModule
 import org.koin.android.ext.koin.androidContext
@@ -24,6 +25,7 @@ class MainApplication : Application() {
                 // tables feature modules
                 tablesDataModule,
                 tablesDomainModule,
+                tablesUiModule
             )
         }
     }

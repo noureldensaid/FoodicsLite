@@ -18,7 +18,7 @@ interface TablesRepository {
 
     fun observeCartSummary(): Flow<CartSummary>
 
-    suspend fun syncCategories(): ResponseState<Unit>
+    suspend fun syncCategories(): ResponseState<List<Category>>
     suspend fun syncProductsForCategory(categoryId: String): ResponseState<Unit>
 
     suspend fun addProduct(productId: String)

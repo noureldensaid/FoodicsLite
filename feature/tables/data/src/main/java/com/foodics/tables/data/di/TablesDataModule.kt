@@ -8,27 +8,22 @@ import com.foodics.tables.data.remote.TablesRemoteDataSource
 import com.foodics.tables.data.remote.TablesRemoteDataSourceImpl
 import com.foodics.tables.data.repository.TablesRepositoryImpl
 import com.foodics.tables.domain.repository.TablesRepository
+import org.koin.core.module.dsl.bind
+import org.koin.core.module.dsl.factoryOf
+import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 
 val tablesDataModule = module {
 
-    single<TablesRemoteDataSource> { TablesRemoteDataSourceImpl(get()) } // HttpClient
+    // Remote (needs HttpClient from networkModule)
+    singleOf(::TablesRemoteDataSourceImpl) { bind<TablesRemoteDataSource>() }
 
-    factory { CategoryRemoteToEntityMapper() }
-    factory { CategoryEntityToDomainMapper() }
-    factory { ProductEntityToDomainMapper() }
-    factory { CartSummaryDbToDomainMapper() }
+    // Mappers
+    factoryOf(::CategoryRemoteToEntityMapper)
+    factoryOf(::CategoryEntityToDomainMapper)
+    factoryOf(::ProductEntityToDomainMapper)
+    factoryOf(::CartSummaryDbToDomainMapper)
 
-    single<TablesRepository> {
-        TablesRepositoryImpl(
-            db = get(),
-            categoryDao = get(),
-            productDao = get(),
-            remote = get(),
-            categoryRemoteToEntity = get(),
-            categoryEntityToDomain = get(),
-            productEntityToDomain = get(),
-            cartSummaryDbToDomain = get()
-        )
-    }
+    // Repository
+    singleOf(::TablesRepositoryImpl) { bind<TablesRepository>() }
 }

@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.androidx.room)
 }
 
 android {
@@ -35,6 +37,10 @@ android {
     }
 }
 
+room {
+    schemaDirectory("$projectDir/schemas")
+}
+
 dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
@@ -44,9 +50,14 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
 
     implementation(libs.kotlinx.serialization)
+
     implementation(libs.bundles.koin)
+    ksp(libs.koin.ksp.compiler)
+
     implementation(libs.bundles.ktor)
+
     implementation(libs.bundles.room)
+    ksp(libs.androidx.room.compiler)
 
     implementation(project(":core:common"))
     implementation(project(":core:network"))
