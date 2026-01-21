@@ -8,18 +8,19 @@ import com.foodics.tables.domain.usecase.ObserveCategoriesUseCase
 import com.foodics.tables.domain.usecase.ObserveProductsUseCase
 import com.foodics.tables.domain.usecase.SyncCategoriesUseCase
 import com.foodics.tables.domain.usecase.SyncProductsForCategoryUseCase
+import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.module
 
 val tablesDomainModule = module {
 
-    factory { ObserveCategoriesUseCase(get()) }
-    factory { ObserveProductsUseCase(get()) }
-    factory { ObserveCartSummaryUseCase(get()) }
+    factoryOf(::ObserveCategoriesUseCase)
+    factoryOf(::ObserveProductsUseCase)
+    factoryOf(::ObserveCartSummaryUseCase)
 
-    factory { SyncCategoriesUseCase(get()) }
-    factory { SyncProductsForCategoryUseCase(get()) }
+    factoryOf(::SyncCategoriesUseCase)
+    factoryOf(::SyncProductsForCategoryUseCase)
 
-    factory { AddProductUseCase(get()) }
-    factory { ClearCartUseCase(get()) }
-    factory { GetOrderedProductsUseCase(get()) }
+    factoryOf(::AddProductUseCase)
+    factoryOf(::ClearCartUseCase)
+    factoryOf(::GetOrderedProductsUseCase)
 }

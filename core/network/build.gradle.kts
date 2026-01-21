@@ -1,5 +1,7 @@
 plugins {
     alias(libs.plugins.android.library)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -55,6 +57,9 @@ dependencies {
     releaseImplementation(libs.library.no.op)
 
     implementation(libs.bundles.koin)
+    ksp(libs.koin.ksp.compiler)
+
+    implementation(libs.kotlinx.serialization)
 
     implementation(project(":core:common"))
 }

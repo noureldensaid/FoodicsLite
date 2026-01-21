@@ -2,7 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.kotlin.serialization)
-//    alias(libs.plugins.kotlin.parcelize)
+    alias(libs.plugins.ksp)
 }
 
 android {
@@ -61,6 +61,8 @@ dependencies {
 
     // DI
     implementation(libs.bundles.koin)
+    ksp(libs.koin.ksp.compiler)
+
 
     // Logging
     implementation(libs.timber)

@@ -55,15 +55,22 @@ class TablesRepositoryImpl(
         return productDao.getOrderedProducts().map { productEntityToDomain.map(it) }
     }
 
-    override suspend fun syncCategories(): ResponseState<Unit> {
-        val state = remote.getCategories()
-        if (state is ResponseState.Error) return state
-
-        val dtos = (state as ResponseState.Success).data
-        val entities = dtos.map { categoryRemoteToEntity.map(it) }
-
-        db.withTransaction { categoryDao.upsertAll(entities) }
-        return ResponseState.Success(Unit)
+    override suspend fun syncCategories(): ResponseState<List<Category>> {
+        return when (val remoteCategories = remote.getCategories()) {
+            is ResponseState.Error -> ResponseState.Error(
+                remoteCategories.error,
+                remoteCategories.errorBody
+            )
+            is ResponseState.Success -> {
+                val dtos = remoteCategories.data
+                val entities = dtos.map { categoryRemoteToEntity.map(it) }
+                entities.let {
+                    db.withTransaction { categoryDao.upsertAll(entities) }
+                }
+                val domainCategories = entities.map { categoryEntityToDomain.map(it) }
+                ResponseState.Success(domainCategories)
+            }
+        }
     }
 
     override suspend fun syncProductsForCategory(categoryId: String): ResponseState<Unit> {
