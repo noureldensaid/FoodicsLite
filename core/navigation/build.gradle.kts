@@ -52,6 +52,7 @@ dependencies {
     implementation(libs.kotlinx.serialization)
 
     implementation(project(":core:ui"))
+    implementation(project(":core:common"))
     implementation(project(":feature:tables:ui"))
     implementation(project(":feature:menu:ui"))
     implementation(project(":feature:settings:ui"))
