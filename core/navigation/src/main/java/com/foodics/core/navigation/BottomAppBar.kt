@@ -26,7 +26,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.foodics.core.ui.extensions.noRippleClickable
+import com.foodics.core.ui.extensions.onClick
 
 @Composable
 fun BottomAppBar(
@@ -52,7 +52,7 @@ fun BottomAppBar(
                     Column(
                         modifier = Modifier
                             .weight(1f)
-                            .noRippleClickable {
+                            .onClick {
                                 navController.navigate(navItem.route) {
                                     popUpTo(navController.graph.findStartDestination().id) {
                                         saveState = true

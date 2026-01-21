@@ -1,33 +1,33 @@
 package com.foodics.feature.tables.ui.screen
 
-import android.util.Log
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import com.foodics.core.common.util.ObserveAsEvents
+import com.foodics.core.common.result.ResponseState
+import com.foodics.feature.tables.ui.model.TablesScreenEvent
 import com.foodics.feature.tables.ui.viewmodel.TablesViewModel
-import org.koin.androidx.compose.koinViewModel
+import kotlinx.coroutines.flow.Flow
 
 @Composable
-fun TablesScreen() {
+fun TablesScreen(
+    viewModel: TablesViewModel,
+    isLoading: (show: Boolean) -> Unit = {},
+    errorFlow: (error: Flow<ResponseState.Error>) -> Unit = {},
+    onRetry: (() -> Unit) -> Unit = {}
+) {
 
-    val viewModel : TablesViewModel = koinViewModel()
     val state by viewModel.state.collectAsState()
-    val error = viewModel.errorFlow
 
-    ObserveAsEvents(error){ error ->
-        Log.d("TablesViewModel", "error: $error")
+    isLoading(state.isLoading)
+
+    onRetry {
+        viewModel.onEvent(TablesScreenEvent.LoadInitialData)
     }
 
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
-        Text(text = state.toString())
-    }
+    errorFlow(viewModel.errorFlow)
+
+    TableScreenRoot(
+        state = state,
+        onEvent = viewModel::onEvent
+    )
 }

@@ -1,4 +1,7 @@
 <resources>
     <string name="ok">OK</string>
     <string name="Search_for_product">Search by product name or code</string>
+    <string name="try_again">Try again</string>
+    <string name="no_internet">No internet connection</string>
+    <string name="no_internet_details">Looks like your internet is on a coffee break!\nCheck your connection and try again.</string>
 </resources>
