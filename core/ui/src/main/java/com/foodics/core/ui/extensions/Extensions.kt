@@ -17,7 +17,7 @@ inline fun Modifier.conditional(
     }
 }
 
-inline fun Modifier.noRippleClickable(
+inline fun Modifier.onClick(
     crossinline onClick: () -> Unit
 ): Modifier = composed {
     this.clickable(
