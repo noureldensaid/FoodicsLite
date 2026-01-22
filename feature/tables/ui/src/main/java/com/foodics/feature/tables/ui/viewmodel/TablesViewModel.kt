@@ -16,6 +16,7 @@ import com.foodics.tables.domain.usecase.SyncCategoriesUseCase
 import com.foodics.tables.domain.usecase.SyncProductsForCategoryUseCase
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -103,7 +104,6 @@ class TablesViewModel(
                             didSetDefaultCategory = true
                             list.first().id
                         }
-
                         else -> current.selectedCategoryId
                     }
 
@@ -130,6 +130,7 @@ class TablesViewModel(
         }
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     private fun observeProducts() {
         // reacts to selectedCategoryId/searchQuery changes
         viewModelScope.launch {
@@ -165,36 +166,36 @@ class TablesViewModel(
 
     private fun onSearchQueryChanged(query: String) {
         _state.update { it.copy(searchQuery = query) }
-        // products collector will react automatically
     }
 
     private fun onProductClicked(productId: String) {
-        /* viewModelScope.launch {
-             runCatching { addProductUseCase(productId) }
-                 .onFailure {
-                     _errorFlow.send(
-                         ResponseState.Error(
-                             error = null,
-                             errorBody = null,
-                             exception = it
-                         )
-                     )
-                 }
-         }*/
-    }
-
-    private fun onViewOrderClicked() {
-        /*viewModelScope.launch {
-            // 1) snapshot items + summary into state (because we will clear DB)
-            val items = runCatching { getOrderedProductsUseCase() }
-                .getOrElse {
-                    _errorFlow.send(
+        viewModelScope.launch {
+            runCatching { addProductUseCase(productId) }
+                .onFailure {
+                  /*  _errorFlow.send(
                         ResponseState.Error(
                             error = null,
                             errorBody = null,
                             exception = it
                         )
-                    )
+                    )*/
+                }
+        }
+    }
+
+
+    private fun onViewOrderClicked() {
+        viewModelScope.launch {
+            // 1) snapshot items + summary into state (because we will clear DB)
+            val items = runCatching { getOrderedProductsUseCase() }
+                .getOrElse {
+                   /* _errorFlow.send(
+                        ResponseState.Error(
+                            error = null,
+                            errorBody = null,
+                            exception = it
+                        )
+                    )*/
                     return@launch
                 }
 
@@ -211,16 +212,17 @@ class TablesViewModel(
             // 2) wipe cart (task requirement)
             runCatching { clearCartUseCase() }
                 .onFailure {
-                    _errorFlow.send(
+                  /*  _errorFlow.send(
                         ResponseState.Error(
                             error = null,
                             errorBody = null,
                             exception = it
                         )
-                    )
+                    )*/
                 }
-        }*/
+        }
     }
+
 
     private fun dismissOrderPreview() {
         _state.update {

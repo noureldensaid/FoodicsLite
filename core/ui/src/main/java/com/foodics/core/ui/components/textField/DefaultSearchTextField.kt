@@ -7,11 +7,14 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -39,6 +42,8 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -52,6 +57,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.foodics.core.ui.R
 import com.foodics.core.ui.components.text.DefaultText
+import com.foodics.core.ui.extensions.skipInteraction
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -60,7 +66,7 @@ import kotlinx.coroutines.launch
 fun DefaultSearchTextField(
     modifier: Modifier = Modifier,
     onSearch: (String) -> Unit = {},
-    initialSearchText: String = "",
+    query: String = "",
     iconTint: Color = MaterialTheme.colorScheme.onSurfaceVariant,
     placeholder: String = stringResource(R.string.Search_for_product),
     debounceTime: Long = 500L,
@@ -87,23 +93,36 @@ fun DefaultSearchTextField(
             )
         }
     },
-    searchBackground: Color = MaterialTheme.colorScheme.surfaceVariant,
+    searchBackground: Color = MaterialTheme.colorScheme.background,
     cursorColor: Color = MaterialTheme.colorScheme.primary,
     textColor: Color = MaterialTheme.colorScheme.onSurface,
     placeholderColor: Color = MaterialTheme.colorScheme.onSurfaceVariant,
+    focusedBorderColor: Color = MaterialTheme.colorScheme.primary,
+    unFocusedBorderColor: Color = MaterialTheme.colorScheme.outlineVariant,
+    borderWidth: Dp = 1.dp,
     cornerRadius: Dp = 12.dp,
     height: Dp = 40.dp,
     enabled: Boolean = true,
     onImeSearch: (() -> Unit)? = null,
-    onFocusChanged: ((Boolean) -> Unit)? = null
 ) {
-    var searchText by remember { mutableStateOf(initialSearchText) }
+    var searchText by remember { mutableStateOf(query) }
     var isSearchFocused by remember { mutableStateOf(false) }
+
     val keyboardController = LocalSoftwareKeyboardController.current
+    val focusManager = LocalFocusManager.current
     val focusRequester = remember { FocusRequester() }
     val coroutineScope = rememberCoroutineScope()
 
-    LaunchedEffect(initialSearchText) { searchText = initialSearchText }
+    val imeBottomPx = WindowInsets.ime.getBottom(LocalDensity.current)
+    val imeVisible = imeBottomPx > 0
+
+    LaunchedEffect(imeVisible) {
+        if (!imeVisible && isSearchFocused) {
+            focusManager.clearFocus()
+        }
+    }
+
+    LaunchedEffect(query) { searchText = query }
 
     val debounceJob = remember { mutableStateOf<Job?>(null) }
     val latestOnSearch = rememberUpdatedState(onSearch)
@@ -116,19 +135,28 @@ fun DefaultSearchTextField(
         }
     }
 
-    LaunchedEffect(isSearchFocused) { onFocusChanged?.invoke(isSearchFocused) }
+    LaunchedEffect(imeVisible) {
+        if (!imeVisible && isSearchFocused) {
+            focusManager.clearFocus()
+        }
+    }
 
     Box(
         modifier = modifier
             .fillMaxWidth()
             .height(height)
             .clip(RoundedCornerShape(cornerRadius))
+            .border(
+                borderWidth,
+                if (isSearchFocused) focusedBorderColor else unFocusedBorderColor,
+                RoundedCornerShape(cornerRadius)
+            )
             .background(searchBackground)
             .animateContentSize()
     ) {
         BasicTextField(
             value = searchText,
-            enabled = enabled,
+            enabled = enabled, interactionSource = skipInteraction(),
             onValueChange = { searchText = it },
             modifier = Modifier
                 .fillMaxSize()
@@ -203,7 +231,7 @@ fun DefaultSearchTextField(
 @Composable
 private fun DefaultSearchTextFieldPreview() {
     DefaultSearchTextField(
-        initialSearchText = "Pis",
+        query = "Pis",
         onSearch = { searchQuery ->
         },
     )

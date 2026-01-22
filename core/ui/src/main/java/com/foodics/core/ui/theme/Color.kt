@@ -2,7 +2,7 @@ package com.foodics.core.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val primaryLight = Color(0xFF00677D)
+val primaryLight = Color(0xFF440099)
 val onPrimaryLight = Color(0xFFFFFFFF)
 val primaryContainerLight = Color(0xFF78C4DD)
 val onPrimaryContainerLight = Color(0xFF005163)
@@ -39,7 +39,7 @@ val surfaceContainerHighLight = Color(0xFFE6E8EA)
 val surfaceContainerHighestLight = Color(0xFFE0E3E5)
 
 
-val primaryDark = Color(0xFF94E0FA)
+val primaryDark = Color(0xFF440099)
 val onPrimaryDark = Color(0xFF003642)
 val primaryContainerDark = Color(0xFF78C4DD)
 val onPrimaryContainerDark = Color(0xFF005163)
@@ -75,7 +75,7 @@ val surfaceContainerDark = Color(0xFF1C2022)
 val surfaceContainerHighDark = Color(0xFF272B2C)
 val surfaceContainerHighestDark = Color(0xFF323537)
 
-
+val green = Color(0xFF008000)
 
 
 

@@ -34,7 +34,7 @@ fun DefaultText(
         lineHeight = 16.sp,
         fontWeight = fontWeight,
         fontFamily = AppTypography.bodyMedium.fontFamily,
-        platformStyle = PlatformTextStyle(includeFontPadding = true),
+        platformStyle = PlatformTextStyle(includeFontPadding = false),
     )
 ) {
     val content = @Composable {
