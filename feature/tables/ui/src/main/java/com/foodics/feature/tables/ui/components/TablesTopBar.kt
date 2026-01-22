@@ -7,9 +7,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
@@ -21,11 +23,13 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -45,11 +49,15 @@ fun TablesTopBar(
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 8.dp),
+        verticalArrangement = Arrangement.Center
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 4.dp),
+                .padding(horizontal = 4.dp)
+                .padding(
+                    top = WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
+                ),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
         ) {
@@ -60,7 +68,8 @@ fun TablesTopBar(
                 Icon(
                     imageVector = Icons.Default.Person,
                     contentDescription = null,
-                    modifier = Modifier.size(16.dp)
+                    modifier = Modifier.size(20.dp),
+                    tint = MaterialTheme.colorScheme.primary
                 )
                 DefaultText(
                     text = "Nour Elden Said",
@@ -71,7 +80,7 @@ fun TablesTopBar(
                 horizontalArrangement = Arrangement.spacedBy(6.dp)
             ) {
                 DefaultText(
-                    text = Random.nextInt(1, 999).toString(),
+                    text = Random.nextInt(1, 999).toString().padStart(2, '0'),
                 )
                 Box(
                     modifier = Modifier
@@ -81,13 +90,23 @@ fun TablesTopBar(
                 )
             }
         }
+        LinearProgressIndicator(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 8.dp),
+            trackColor = if (isSyncing) MaterialTheme.colorScheme.surfaceVariant else Color.Transparent,
+            color = if (isSyncing) MaterialTheme.colorScheme.primary else Color.Transparent,
+        )
         TopAppBar(
-            windowInsets = WindowInsets(top = 0),
+            colors = TopAppBarDefaults.topAppBarColors(
+                containerColor = MaterialTheme.colorScheme.background
+            ),
+            windowInsets = WindowInsets(top = 0, bottom = 0),
             title = {
                 DefaultText(
                     text = "Menu",
-                    fontWeight = FontWeight.SemiBold,
-                    fontSize = 18.sp
+                    fontWeight = Bold,
+                    fontSize = 20.sp
                 )
             },
             navigationIcon = {
@@ -96,30 +115,30 @@ fun TablesTopBar(
             actions = {
                 // simple “header” actions like screenshot
                 Icon(
-                    Icons.Default.Restaurant,
+                    imageVector = Icons.Default.Restaurant,
+                    tint = MaterialTheme.colorScheme.onBackground,
+                    modifier = Modifier.size(20.dp),
                     contentDescription = null,
-                    modifier = Modifier.size(16.dp)
                 )
                 Spacer(Modifier.width(6.dp))
-                DefaultText(Random.nextInt(1, 99).toString() , style = MaterialTheme.typography.titleSmall)
+                DefaultText(
+                    text = Random.nextInt(1, 99).toString().padStart(2, '0'),
+                    fontSize = 14.sp
+                )
                 Spacer(Modifier.width(18.dp))
                 Icon(
-                    Icons.Default.PeopleAlt,
+                    imageVector = Icons.Default.PeopleAlt,
+                    tint = MaterialTheme.colorScheme.onBackground,
+                    modifier = Modifier.size(20.dp),
                     contentDescription = null,
-                    modifier = Modifier.size(16.dp)
                 )
                 Spacer(Modifier.width(6.dp))
-                DefaultText(Random.nextInt(1, 99).toString(), style = MaterialTheme.typography.titleSmall)
+                DefaultText(
+                    text = Random.nextInt(1, 99).toString().padStart(2, '0'),
+                    fontSize = 14.sp
+                )
             }
         )
-
-        if (isSyncing) {
-            LinearProgressIndicator(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 12.dp)
-            )
-        }
     }
 }
 

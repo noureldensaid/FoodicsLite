@@ -6,5 +6,4 @@ sealed interface TablesScreenEvent {
     data class OnSearchQueryChanged(val query: String) : TablesScreenEvent
     data class OnProductClicked(val productId: String) : TablesScreenEvent
     data object OnViewOrderClicked : TablesScreenEvent
-    data object OnDismissOrderPreview : TablesScreenEvent
 }

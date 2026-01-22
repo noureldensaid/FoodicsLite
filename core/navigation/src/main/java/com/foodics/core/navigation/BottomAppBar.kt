@@ -1,15 +1,18 @@
 package com.foodics.core.navigation
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.systemBars
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
@@ -26,6 +29,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.foodics.core.ui.components.text.DefaultText
 import com.foodics.core.ui.extensions.onClick
 
 @Composable
@@ -37,7 +41,11 @@ fun BottomAppBar(
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
     NavigationBar(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(MaterialTheme.colorScheme.background)
+            .height(50.dp + WindowInsets.systemBars.asPaddingValues().calculateBottomPadding())
+        ,
         containerColor = MaterialTheme.colorScheme.background,
     ) {
         Row(
@@ -47,6 +55,7 @@ fun BottomAppBar(
         ) {
             tabList.forEach { navItem ->
                 val isSelected = currentRoute == navItem.route.getRoute()
+                val tint = if (isSelected) MaterialTheme.colorScheme.onBackground else Color.Gray
 
                 key(navItem.route.getRoute()) {
                     Column(
@@ -60,21 +69,17 @@ fun BottomAppBar(
                                     launchSingleTop = true
                                     restoreState = true
                                 }
-                            }
-                            .padding(vertical = 8.dp),
+                            },
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.spacedBy(4.dp, Alignment.CenterVertically)
                     ) {
-                        val tint =
-                            if (isSelected) MaterialTheme.colorScheme.onBackground else Color.Gray
-
                         Icon(
                             imageVector = ImageVector.vectorResource(navItem.icon),
                             contentDescription = null,
                             tint = tint,
                             modifier = Modifier.size(24.dp)
                         )
-                        Text(
+                        DefaultText(
                             text = stringResource(navItem.title),
                             color = tint,
                             maxLines = 1,

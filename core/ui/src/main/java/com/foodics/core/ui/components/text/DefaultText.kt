@@ -24,7 +24,7 @@ fun DefaultText(
     modifier: Modifier = Modifier,
     fontSize: TextUnit = 14.sp,
     onClick: (() -> Unit)? = null,
-    fontColor: Color = MaterialTheme.colorScheme.onBackground,
+    color: Color = MaterialTheme.colorScheme.onBackground,
     fontWeight: FontWeight = FontWeight.Normal,
     textAlign: TextAlign = TextAlign.Start,
     maxLines: Int = Int.MAX_VALUE,
@@ -37,13 +37,12 @@ fun DefaultText(
         platformStyle = PlatformTextStyle(includeFontPadding = false),
     )
 ) {
-    val content = @Composable {
         Text(
             text = text,
             fontSize = fontSize,
             fontWeight = fontWeight,
             fontFamily = MaterialTheme.typography.bodyLarge.fontFamily,
-            color = fontColor,
+            color = color,
             textAlign = textAlign,
             modifier = if (onClick != null) modifier.onClick { onClick() } else modifier,
             style = style,
@@ -52,8 +51,6 @@ fun DefaultText(
             overflow = TextOverflow.Ellipsis,
             onTextLayout = onTextLayout ?: {},
         )
-    }
-    content()
 }
 
 @Preview(showBackground = true)

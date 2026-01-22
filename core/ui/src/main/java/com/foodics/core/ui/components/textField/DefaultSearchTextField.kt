@@ -199,7 +199,7 @@ fun DefaultSearchTextField(
                             DefaultText(
                                 text = placeholder,
                                 fontSize = 13.sp,
-                                fontColor = placeholderColor,
+                                color = placeholderColor,
                                 maxLines = 1,
                             )
                         }

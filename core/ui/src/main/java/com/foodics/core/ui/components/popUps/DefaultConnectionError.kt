@@ -76,7 +76,7 @@ fun DefaultConnectionError(
             DefaultText(
                 text = stringResource(id = body),
                 fontSize = 12.sp,
-                fontColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
                 textAlign = TextAlign.Center
             )
 

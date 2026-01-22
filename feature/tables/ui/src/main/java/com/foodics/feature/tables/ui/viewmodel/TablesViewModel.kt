@@ -65,7 +65,6 @@ class TablesViewModel(
             is TablesScreenEvent.OnSearchQueryChanged -> onSearchQueryChanged(event.query)
             is TablesScreenEvent.OnProductClicked -> onProductClicked(event.productId)
             TablesScreenEvent.OnViewOrderClicked -> onViewOrderClicked()
-            TablesScreenEvent.OnDismissOrderPreview -> dismissOrderPreview()
         }
     }
 
@@ -199,13 +198,10 @@ class TablesViewModel(
                     return@launch
                 }
 
-            val summarySnapshot = _state.value.cartSummary
-
             _state.update {
                 it.copy(
                     showOrderPreview = true,
                     orderPreviewItems = items.toPersistentList(),
-                    orderPreviewSummary = summarySnapshot
                 )
             }
 
@@ -220,6 +216,7 @@ class TablesViewModel(
                         )
                     )*/
                 }
+            dismissOrderPreview()
         }
     }
 

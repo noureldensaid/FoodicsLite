@@ -77,7 +77,7 @@ private fun ProductCardPreviewLight() {
                 id = "p1",
                 name = "Product Name",
                 description = "Product Description",
-                image = "",
+                image = "core/ui/src/main/res/drawable/ic_image_placeholder.xml",
                 price = 123.0,
                 quantity = 0,
                 categoryId = "1",

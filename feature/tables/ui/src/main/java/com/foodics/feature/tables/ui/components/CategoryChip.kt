@@ -47,7 +47,7 @@ fun CategoryChip(
     ) {
         DefaultText(
             text = title,
-            fontColor = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
+            color = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
             fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Normal,
             onTextLayout = { textWidthPx = it.size.width }
         )

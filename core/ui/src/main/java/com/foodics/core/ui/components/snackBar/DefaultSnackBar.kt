@@ -66,7 +66,7 @@ fun DefaultSnackbar(
                     contentDescription = null,
                     tint = textColor
                 )
-                DefaultText(text = message, fontColor = textColor, style = textStyle)
+                DefaultText(text = message, color = textColor, style = textStyle)
 
             }
             actionText?.let {

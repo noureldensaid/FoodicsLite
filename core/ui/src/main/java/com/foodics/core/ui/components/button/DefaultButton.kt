@@ -58,7 +58,7 @@ fun DefaultButton(
             modifier = Modifier.fillMaxWidth(),
             textAlign = TextAlign.Center,
             text = text,
-            fontColor = if (enabled) textColor else MaterialTheme.colorScheme.onSurfaceVariant,
+            color = if (enabled) textColor else MaterialTheme.colorScheme.onSurfaceVariant,
             fontWeight = FontWeight.Medium,
             fontSize = fontSize
         )
