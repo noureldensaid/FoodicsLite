@@ -67,7 +67,7 @@ fun DefaultSearchTextField(
     modifier: Modifier = Modifier,
     onSearch: (String) -> Unit = {},
     query: String = "",
-    iconTint: Color = MaterialTheme.colorScheme.onSurfaceVariant,
+    iconTint: Color = MaterialTheme.colorScheme.onBackground,
     placeholder: String = stringResource(R.string.Search_for_product),
     debounceTime: Long = 500L,
     leadingIcon: @Composable (() -> Unit)? = {

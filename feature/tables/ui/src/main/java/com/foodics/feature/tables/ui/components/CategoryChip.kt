@@ -42,7 +42,7 @@ fun CategoryChip(
             .wrapContentHeight()
             .onClick(onClick)
             .padding(horizontal = 4.dp),
-        verticalArrangement = Arrangement.spacedBy(4.dp),
+        verticalArrangement = Arrangement.spacedBy(2.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         DefaultText(
@@ -55,7 +55,7 @@ fun CategoryChip(
         Box(
             modifier = Modifier
                 .width(underlineWidthDp)
-                .height(4.dp)
+                .height(2.dp)
                 .background(
                     color = if (selected) MaterialTheme.colorScheme.primary else Color.Transparent,
                     shape = RoundedCornerShape(100)

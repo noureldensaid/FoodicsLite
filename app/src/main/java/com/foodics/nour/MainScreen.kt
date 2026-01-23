@@ -16,6 +16,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
@@ -36,6 +37,8 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun MainScreen() {
+
+    val context = LocalContext.current
 
     val scope = rememberCoroutineScope()
 
@@ -59,17 +62,11 @@ fun MainScreen() {
     ObserveAsEvents(flow = errorFlow) { error ->
         when (error.error) {
             NetworkError.NO_INTERNET_CONNECTION -> isNetworkConnectionError = true
-            NetworkError.UNAUTHORIZED_ACCESS -> {
-                // navigate to login
-                scope.launch {
-
-                }
-            }
-
             else -> scope.launch {
                 SnackbarController.sendEvent(
                     event = SnackbarAction.SendEvent(
-                        error.errorBody?.message ?: error.error.toString(),
+                        name = error.errorBody?.message ?: error.error.toString(),
+                        label = context.getString(R.string.ok)
                     )
                 )
             }

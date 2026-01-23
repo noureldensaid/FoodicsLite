@@ -99,7 +99,7 @@ fun TablesTopBar(
         )
         TopAppBar(
             colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = MaterialTheme.colorScheme.background
+                containerColor = Color.Transparent
             ),
             windowInsets = WindowInsets(top = 0, bottom = 0),
             title = {

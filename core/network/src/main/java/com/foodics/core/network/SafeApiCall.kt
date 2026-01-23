@@ -32,10 +32,9 @@ suspend inline fun <reified T> safeApiCall(crossinline apiCall: suspend () -> Ht
             is ResponseException -> handleHttpException(e)
             is UnknownHostException -> ResponseState.Error(NetworkError.NO_INTERNET_CONNECTION, null)
             is IOException -> ResponseState.Error(NetworkError.NO_INTERNET_CONNECTION, null)
-            is JsonConvertException -> ResponseState.Error(NetworkError.RESPONSE_PARSING_ERROR,
-                StatusJsonResponse(-1, e.message)
-            )
-            else -> ResponseState.Error(NetworkError.UNKNOWN_ERROR,
+            is JsonConvertException -> ResponseState.Error(NetworkError.RESPONSE_PARSING_ERROR, StatusJsonResponse(-1, e.message))
+            else -> ResponseState.Error(
+                NetworkError.UNKNOWN_ERROR,
                 StatusJsonResponse(-1, e.message)
             )
         }
@@ -64,17 +63,28 @@ suspend fun handleHttpException(e: ResponseException): ResponseState.Error {
 /**
  * Parses API error messages into structured responses.
  */
-fun parseErrorMessage(statusCode: Int, errorBody: String?): StatusJsonResponse? {
+fun parseErrorMessage(statusCode: Int, errorBody: String?): StatusJsonResponse {
+    if (errorBody.isNullOrBlank()) return StatusJsonResponse(statusCode, null)
+
     return runCatching {
-        errorBody?.let {
-            val json = JSONObject(it)
-            val statusObject = json.optJSONObject("status")
-            val errorCode = statusObject?.optInt("code")
-            val errorMessage = statusObject?.optString("message")
-            StatusJsonResponse(errorCode, errorMessage)
-        }
-    }.getOrElse {
-        Timber.tag("safeApiCall").d(it, "Error parsing error message: $it")
+        val json = JSONObject(errorBody)
+
+        // 1) flat: { "error": "Invalid API Key" } or { "message": "..." }
+        val flatMsg = json.optString("error").takeIf { it.isNotBlank() }
+            ?: json.optString("message").takeIf { it.isNotBlank() }
+
+        // 2) nested: { "status": { "code": 123, "error": "..." } }
+        val statusObj = json.optJSONObject("status")
+        val nestedCode = statusObj?.optInt("code")?.takeIf { it != 0 }
+        val nestedMsg = statusObj?.optString("error")?.takeIf { it.isNotBlank() }
+            ?: statusObj?.optString("message")?.takeIf { it.isNotBlank() }
+
+        StatusJsonResponse(
+            code = nestedCode ?: statusCode,
+            message = nestedMsg ?: flatMsg ?: errorBody
+        )
+    }.getOrElse { e ->
+        Timber.tag("safeApiCall").e(e, "Error parsing error message")
         StatusJsonResponse(statusCode, errorBody)
     }
 }
