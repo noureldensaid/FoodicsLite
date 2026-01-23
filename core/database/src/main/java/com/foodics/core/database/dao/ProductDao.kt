@@ -13,13 +13,13 @@ interface ProductDao {
 
     // Products list with search + category filtering
     @Query("""
-        SELECT * FROM products
-        WHERE (:categoryId IS NULL OR categoryId = :categoryId)
-          AND (:query = '' OR name LIKE '%' || :query || '%')
-        ORDER BY name ASC
+    SELECT * FROM products
+    WHERE 
+      (TRIM(:query) != '' AND LOWER(name) LIKE '%' || LOWER(TRIM(:query)) || '%')
+      OR
+      (TRIM(:query) = '' AND (:categoryId IS NULL OR categoryId = :categoryId))
     """)
     fun observeProducts(categoryId: String?, query: String): Flow<List<ProductEntity>>
-
     // For sync merge to preserve quantity
     data class IdQty(val id: String, val quantity: Int)
 

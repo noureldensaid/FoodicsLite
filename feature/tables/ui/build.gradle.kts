@@ -54,6 +54,8 @@ dependencies {
     implementation(libs.kotlinx.collections.immutable)
     implementation(libs.kotlinx.serialization)
 
+    implementation(libs.coil.kt.coil.compose)
+
     implementation(project(":core:ui"))
     implementation(project(":core:common"))
     implementation(project(":feature:tables:domain"))
