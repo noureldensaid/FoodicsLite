@@ -183,13 +183,13 @@ fun TableScreenRoot(
                         )
                     ) {
                         when {
-                            state.isLoading -> {
+                            state.products.isEmpty() && state.isSyncing -> {
                                 items(10) {
                                     ProductCardLoadingShimmer(modifier = Modifier.size(150.dp))
                                 }
                             }
 
-                            state.isLoading.not() && state.products.isEmpty() -> {
+                            state.products.isEmpty() && state.searchQuery.isNotBlank() -> {
                                 item(span = { GridItemSpan(maxLineSpan) }) {
                                     DefaultEmptyState()
                                 }
