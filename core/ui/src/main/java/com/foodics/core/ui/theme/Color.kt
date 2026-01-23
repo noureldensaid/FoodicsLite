@@ -39,7 +39,7 @@ val surfaceContainerHighLight = Color(0xFFE6E8EA)
 val surfaceContainerHighestLight = Color(0xFFE0E3E5)
 
 
-val primaryDark = Color(0xFF450697)
+val primaryDark = Color(0xFFEDC8FF)
 val onPrimaryDark = Color(0xFF003642)
 val primaryContainerDark = Color(0xFF78C4DD)
 val onPrimaryContainerDark = Color(0xFF005163)
@@ -76,7 +76,5 @@ val surfaceContainerHighDark = Color(0xFF272B2C)
 val surfaceContainerHighestDark = Color(0xFF323537)
 
 val green = Color(0xFF008000)
-val purple = Color(android.graphics.Color.parseColor("#450697"))
-
-
+val red = Color(0xFFFF2C2C)
 

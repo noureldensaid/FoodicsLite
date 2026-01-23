@@ -55,6 +55,7 @@ dependencies {
     implementation(libs.kotlinx.serialization)
 
     implementation(libs.coil.kt.coil.compose)
+    implementation(libs.compose.shimmer)
 
     implementation(project(":core:ui"))
     implementation(project(":core:common"))

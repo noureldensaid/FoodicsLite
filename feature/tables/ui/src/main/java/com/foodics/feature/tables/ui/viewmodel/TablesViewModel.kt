@@ -152,7 +152,13 @@ class TablesViewModel(
                 return@launch
             }
 
-            _state.update { it.copy(selectedCategoryId = categoryId, isSyncing = true) }
+            _state.update {
+                it.copy(
+                    selectedCategoryId = categoryId,
+                    isSyncing = true,
+                    searchQuery = ""
+                )
+            }
 
             when (val response = syncProductsForCategoryUseCase(categoryId)) {
                 is ResponseState.Success -> Unit
