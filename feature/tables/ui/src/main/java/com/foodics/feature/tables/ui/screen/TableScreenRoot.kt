@@ -1,10 +1,11 @@
 package com.foodics.feature.tables.ui.screen
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
@@ -24,7 +25,6 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.NavigationBarDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults.Indicator
@@ -43,7 +43,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.foodics.core.ui.components.emptyStates.DefaultEmptyState
 import com.foodics.core.ui.components.textField.DefaultSearchTextField
-import com.foodics.core.ui.theme.FoodicsLiteTheme
 import com.foodics.feature.tables.ui.components.CategoryChip
 import com.foodics.feature.tables.ui.components.ProductCard
 import com.foodics.feature.tables.ui.components.ProductCardLoadingShimmer
@@ -52,6 +51,9 @@ import com.foodics.feature.tables.ui.components.ViewOrderBar
 import com.foodics.feature.tables.ui.model.TablesScreenEvent
 import com.foodics.feature.tables.ui.model.TablesScreenState
 import com.foodics.tables.domain.model.CartSummary
+import com.foodics.tables.domain.model.Category
+import com.foodics.tables.domain.model.Product
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.launch
 
 @Composable
@@ -61,7 +63,7 @@ fun TableScreenRoot(
     onEvent: (TablesScreenEvent) -> Unit
 ) {
 
-    val scope = rememberCoroutineScope()
+    val coroutineScope = rememberCoroutineScope()
 
     var selectedTabIndex by rememberSaveable { mutableIntStateOf(0) }
 
@@ -89,29 +91,6 @@ fun TableScreenRoot(
         modifier = modifier.fillMaxSize(),
         containerColor = MaterialTheme.colorScheme.background,
         topBar = { TablesTopBar(isSyncing = state.isSyncing) },
-        bottomBar = {
-            AnimatedVisibility(
-                visible = state.cartSummary.totalQty > 0,
-                enter = slideInHorizontally(),
-                exit = slideOutHorizontally(
-                    animationSpec = tween(300),
-                    targetOffsetX = { fullWidth -> fullWidth }
-                ),
-            ) {
-                ViewOrderBar(
-                    modifier = Modifier.padding(
-                        start = 12.dp,
-                        end = 12.dp,
-                        bottom = 50.dp + NavigationBarDefaults.windowInsets
-                            .asPaddingValues()
-                            .calculateBottomPadding()
-                    ),
-                    qty = state.cartSummary.totalQty,
-                    totalPrice = state.cartSummary.totalPrice,
-                    onClick = { onEvent(TablesScreenEvent.OnViewOrderClicked) }
-                )
-            }
-        }
     ) { padding ->
         PullToRefreshBox(
             state = pullToRefreshState,
@@ -132,11 +111,11 @@ fun TableScreenRoot(
             },
         ) {
             Column(
-            modifier = Modifier
-                .padding(padding)
-                .fillMaxSize(),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(padding),
                 verticalArrangement = Arrangement.spacedBy(12.dp),
-                horizontalAlignment = Alignment.Start
+                horizontalAlignment = Alignment.Start,
         ) {
             DefaultSearchTextField(
                 modifier = Modifier
@@ -152,62 +131,63 @@ fun TableScreenRoot(
                 state = lazyRowState,
                 contentPadding = PaddingValues(horizontal = 12.dp),
                 horizontalArrangement = Arrangement.spacedBy(24.dp),
-                verticalAlignment = Alignment.Top
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                items(state.categories, key = { it.id }) { cat ->
+                items(state.categories, key = { it.id }) { category ->
                     CategoryChip(
-                        title = cat.name,
-                        selected = cat.id == state.selectedCategoryId,
+                        title = category.name,
+                        selected = category.id == state.selectedCategoryId,
                         onClick = {
-                            selectedTabIndex = state.categories.indexOf(cat)
-                            scope.launch {
+                            selectedTabIndex = state.categories.indexOf(category)
+                            coroutineScope.launch {
                                 pagerState.scrollToPage(selectedTabIndex)
                                 lazyRowState.animateScrollToItem(selectedTabIndex)
                             }
-                            onEvent(TablesScreenEvent.OnCategorySelected(cat.id))
+                            onEvent(TablesScreenEvent.OnCategorySelected(category.id))
                         }
                     )
                 }
             }
 
             if (state.categories.isNotEmpty()) {
-                HorizontalPager(
-                    modifier = Modifier.fillMaxSize(),
-                    state = pagerState,
-                    userScrollEnabled = state.searchQuery.isBlank(),
-                ) {
-                    LazyVerticalGrid(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(horizontal = 12.dp),
-                        horizontalArrangement = Arrangement.spacedBy(12.dp),
-                        verticalArrangement = Arrangement.spacedBy(
-                            12.dp,
-                            Alignment.CenterVertically
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(MaterialTheme.colorScheme.surfaceContainer)
+                        .padding(
+                            bottom = WindowInsets.navigationBars.asPaddingValues()
+                                .calculateBottomPadding()
                         ),
-                        columns = GridCells.Adaptive(100.dp),
-                        contentPadding = PaddingValues(
-                            top = 12.dp,
-                            bottom = WindowInsets.navigationBars
-                                .asPaddingValues()
-                                .calculateBottomPadding() + 48.dp
-                        )
+                    contentAlignment = Alignment.BottomCenter
+                ) {
+                    HorizontalPager(
+                        modifier = Modifier.fillMaxSize(),
+                        state = pagerState,
+                        userScrollEnabled = state.searchQuery.isBlank(),
                     ) {
-                        when {
-                            state.products.isEmpty() && state.isSyncing -> {
-                                items(10) {
+                        LazyVerticalGrid(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(horizontal = 12.dp),
+                            horizontalArrangement = Arrangement.spacedBy(12.dp),
+                            verticalArrangement = Arrangement.spacedBy(
+                                12.dp,
+                                if (state.products.isEmpty()) Alignment.CenterVertically else Alignment.Top
+                            ),
+                            columns = GridCells.Adaptive(100.dp),
+                            contentPadding = PaddingValues(top = 12.dp, bottom = 100.dp)
+                        ) {
+                            when {
+                                state.products.isEmpty() && state.isSyncing -> items(10) {
                                     ProductCardLoadingShimmer(modifier = Modifier.size(150.dp))
                                 }
-                            }
 
-                            state.products.isEmpty() && state.searchQuery.isNotBlank() -> {
-                                item(span = { GridItemSpan(maxLineSpan) }) {
+                                state.products.isEmpty() && state.searchQuery.isNotBlank() -> item(
+                                    span = { GridItemSpan(maxLineSpan) }) {
                                     DefaultEmptyState()
                                 }
-                            }
 
-                            else -> {
-                                items(
+                                else -> items(
                                     items = state.products,
                                     key = { it.id }
                                 ) { product ->
@@ -221,6 +201,27 @@ fun TableScreenRoot(
                             }
                         }
                     }
+                    androidx.compose.animation.AnimatedVisibility(
+                        modifier = Modifier.align(Alignment.BottomCenter),
+                        visible = state.cartSummary.totalQty > 0,
+                        enter = slideInHorizontally(),
+                        exit = slideOutHorizontally(
+                            animationSpec = tween(300),
+                            targetOffsetX = { fullWidth -> fullWidth }
+                        ),
+                    ) {
+                        ViewOrderBar(
+                            modifier = Modifier
+                                .padding(
+                                    start = 12.dp,
+                                    end = 12.dp,
+                                    bottom = 40.dp
+                                ),
+                            qty = state.cartSummary.totalQty,
+                            totalPrice = state.cartSummary.totalPrice,
+                            onClick = { onEvent(TablesScreenEvent.OnViewOrderClicked) }
+                        )
+                    }
                 }
             }
             }
@@ -228,19 +229,121 @@ fun TableScreenRoot(
     }
 }
 
-
-@Preview(showBackground = true)
+@Preview(name = "Tables - With Products + Cart")
 @Composable
-private fun TablesScreenPreview_WithCartBar() {
-    FoodicsLiteTheme {
+private fun TableScreenRootPreview_WithProductsAndCart() {
+    MaterialTheme {
         TableScreenRoot(
             state = TablesScreenState(
+                categories = persistentListOf(
+                    Category(id = "c1", name = "Coffee"),
+                    Category(id = "c2", name = "Desserts"),
+                    Category(id = "c3", name = "Sandwiches"),
+                ),
+                products = persistentListOf(
+                    Product(
+                        id = "p1",
+                        name = "Americano",
+                        description = "Single-origin, smooth",
+                        image = "",
+                        price = 18.0,
+                        categoryId = "c1",
+                        categoryName = "Coffee",
+                        quantity = 0
+                    ),
+                    Product(
+                        id = "p2",
+                        name = "Latte",
+                        description = "With oat milk",
+                        image = "",
+                        price = 24.0,
+                        categoryId = "c1",
+                        categoryName = "Coffee",
+                        quantity = 0
+                    ),
+                    Product(
+                        id = "p3",
+                        name = "Cheesecake",
+                        description = "Classic",
+                        image = "",
+                        price = 32.0,
+                        categoryId = "c2",
+                        categoryName = "Desserts",
+                        quantity = 0
+                    ),
+                ),
+                selectedCategoryId = "c1",
+                searchQuery = "",
+                cartSummary = CartSummary(totalQty = 3, totalPrice = 74.0),
                 isLoading = false,
                 isSyncing = false,
-                cartSummary = CartSummary(
-                    totalQty = 5,
-                    totalPrice = 1234.0
-                )
+            ),
+            onEvent = {}
+        )
+    }
+}
+
+@Preview(name = "Tables - Empty")
+@Composable
+private fun TableScreenRootPreview_Empty() {
+    MaterialTheme {
+        TableScreenRoot(
+            state = TablesScreenState(
+                categories = persistentListOf(
+                    Category(id = "c1", name = "Coffee"),
+                    Category(id = "c2", name = "Desserts"),
+                    Category(id = "c3", name = "Sandwiches"),
+                ),
+                products = persistentListOf(),
+                selectedCategoryId = "c1",
+                searchQuery = "",
+                cartSummary = CartSummary(totalQty = 0, totalPrice = 0.0),
+                isLoading = false,
+                isSyncing = false,
+            ),
+            onEvent = {}
+        )
+    }
+}
+
+@Preview(name = "Tables - Searching (Empty State)")
+@Composable
+private fun TableScreenRootPreview_SearchEmpty() {
+    MaterialTheme {
+        TableScreenRoot(
+            state = TablesScreenState(
+                categories = persistentListOf(
+                    Category(id = "c1", name = "Coffee"),
+                    Category(id = "c2", name = "Desserts"),
+                ),
+                products = persistentListOf(),
+                selectedCategoryId = "c1",
+                searchQuery = "zzzz",
+                cartSummary = CartSummary(totalQty = 0, totalPrice = 0.0),
+                isLoading = false,
+                isSyncing = false,
+            ),
+            onEvent = {}
+        )
+    }
+}
+
+@Preview(name = "Tables - Loading")
+@Composable
+private fun TableScreenRootPreview_Loading() {
+    MaterialTheme {
+        TableScreenRoot(
+            state = TablesScreenState(
+                categories = persistentListOf(
+                    Category(id = "c1", name = "Coffee"),
+                    Category(id = "c2", name = "Desserts"),
+                ),
+                products = persistentListOf(),
+                selectedCategoryId = "c1",
+                searchQuery = "",
+                cartSummary = CartSummary(totalQty = 0, totalPrice = 0.0),
+                isLoading = true,
+                isSyncing = true,
             ),
             onEvent = {}
         )

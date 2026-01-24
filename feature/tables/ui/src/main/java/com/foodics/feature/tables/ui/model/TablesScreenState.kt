@@ -12,12 +12,9 @@ import kotlinx.collections.immutable.persistentListOf
 data class TablesScreenState(
     val categories: PersistentList<Category> = persistentListOf(),
     val products: PersistentList<Product> = persistentListOf(),
-
     val selectedCategoryId: String? = null,
     val searchQuery: String = "",
-
     val cartSummary: CartSummary = CartSummary(totalQty = 0, totalPrice = 0.0),
-
     val isLoading: Boolean = true,
     val isSyncing: Boolean = false,
 )

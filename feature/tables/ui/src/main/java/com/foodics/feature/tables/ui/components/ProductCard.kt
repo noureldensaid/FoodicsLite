@@ -70,7 +70,7 @@ fun ProductCard(
             shape = RoundedCornerShape(6.dp),
             interactionSource = skipInteraction(),
             colors = CardDefaults.elevatedCardColors(
-                containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
+                containerColor = MaterialTheme.colorScheme.background,
             ),
         ) {
             Column(Modifier.fillMaxSize()) {

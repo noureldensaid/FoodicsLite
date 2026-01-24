@@ -89,7 +89,7 @@ fun MainScreen() {
         else -> MaterialTheme.colorScheme.background
     }
 
-    ObserveAsEvents(mainViewModel.isConnected) { isConnected ->
+    ObserveAsEvents(mainViewModel.isConnectedState) { isConnected ->
         isConnected?.let {
             isOfflineMode = !isConnected
             scope.launch {
