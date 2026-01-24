@@ -1,4 +1,4 @@
-package com.foodics.nour
+package com.foodics.nour.ui
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity

@@ -1,20 +1,21 @@
 package com.foodics.feature.tables.ui.viewmodel
 
-import android.util.Log
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.foodics.core.common.result.ResponseState
+import com.foodics.core.common.result.StatusJsonResponse
+import com.foodics.core.database.DatabaseError
 import com.foodics.feature.tables.ui.model.TablesScreenEvent
 import com.foodics.feature.tables.ui.model.TablesScreenState
+import com.foodics.tables.domain.model.CartSummary
 import com.foodics.tables.domain.usecase.AddProductUseCase
 import com.foodics.tables.domain.usecase.ClearCartUseCase
-import com.foodics.tables.domain.usecase.GetOrderedProductsUseCase
 import com.foodics.tables.domain.usecase.ObserveCartSummaryUseCase
 import com.foodics.tables.domain.usecase.ObserveCategoriesUseCase
 import com.foodics.tables.domain.usecase.ObserveProductsUseCase
 import com.foodics.tables.domain.usecase.SyncCategoriesUseCase
 import com.foodics.tables.domain.usecase.SyncProductsForCategoryUseCase
-import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
@@ -38,7 +39,7 @@ class TablesViewModel(
     private val syncProductsForCategoryUseCase: SyncProductsForCategoryUseCase,
     private val addProductUseCase: AddProductUseCase,
     private val clearCartUseCase: ClearCartUseCase,
-    private val getOrderedProductsUseCase: GetOrderedProductsUseCase
+    private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
     private val _errorFlow = Channel<ResponseState.Error>(Channel.BUFFERED)
@@ -56,7 +57,7 @@ class TablesViewModel(
                 hasInitialDataLoaded = true
             }
         }
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), _state.value)
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), _state.value)
 
     fun onEvent(event: TablesScreenEvent) {
         when (event) {
@@ -75,13 +76,10 @@ class TablesViewModel(
 
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true, isSyncing = true) }
-            Log.d("TablesViewModel", "loading...InitialData")
 
             when (val response = syncCategoriesUseCase()) {
                 is ResponseState.Success -> {
                     val categories = response.data
-                    Log.d("TablesViewModel", "loadInitialData: $categories")
-
                     _state.update { it.copy(categories = categories.toPersistentList()) }
                 }
 
@@ -131,7 +129,6 @@ class TablesViewModel(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     private fun observeProducts() {
-        // reacts to selectedCategoryId/searchQuery changes
         viewModelScope.launch {
             state
                 .map { it.selectedCategoryId to it.searchQuery }
@@ -164,7 +161,6 @@ class TablesViewModel(
                 is ResponseState.Success -> Unit
                 is ResponseState.Error -> _errorFlow.send(response)
             }
-
             _state.update { it.copy(isSyncing = false) }
         }
     }
@@ -177,13 +173,15 @@ class TablesViewModel(
         viewModelScope.launch {
             runCatching { addProductUseCase(productId) }
                 .onFailure {
-                  /*  _errorFlow.send(
+                    _errorFlow.send(
                         ResponseState.Error(
-                            error = null,
-                            errorBody = null,
-                            exception = it
+                            error = DatabaseError.QUERY_FAILED,
+                            errorBody = StatusJsonResponse(
+                                message = it.message,
+                                code = -1
+                            ),
                         )
-                    )*/
+                    )
                 }
         }
     }
@@ -191,52 +189,23 @@ class TablesViewModel(
 
     private fun onViewOrderClicked() {
         viewModelScope.launch {
-            // 1) snapshot items + summary into state (because we will clear DB)
-            val items = runCatching { getOrderedProductsUseCase() }
-                .getOrElse {
-                   /* _errorFlow.send(
-                        ResponseState.Error(
-                            error = null,
-                            errorBody = null,
-                            exception = it
-                        )
-                    )*/
-                    return@launch
-                }
-
-            _state.update {
-                it.copy(
-                    showOrderPreview = true,
-                    orderPreviewItems = items.toPersistentList(),
-                )
-            }
-
-            // 2) wipe cart (task requirement)
             runCatching { clearCartUseCase() }
                 .onFailure {
-                  /*  _errorFlow.send(
+                    _errorFlow.send(
                         ResponseState.Error(
-                            error = null,
-                            errorBody = null,
-                            exception = it
+                            error = DatabaseError.DELETE_FAILED,
+                            errorBody = StatusJsonResponse(
+                                message = it.message,
+                                code = -1
+                            ),
                         )
-                    )*/
+                    )
                 }
-            dismissOrderPreview()
-        }
-    }
-
-
-    private fun dismissOrderPreview() {
-        _state.update {
-            it.copy(
-                showOrderPreview = false,
-                orderPreviewItems = persistentListOf(),
-                orderPreviewSummary = it.orderPreviewSummary.copy(
-                    totalQty = 0,
-                    totalPrice = 0.0
+            _state.update {
+                it.copy(
+                    cartSummary = CartSummary(totalQty = 0, totalPrice = 0.0),
                 )
-            )
+            }
         }
     }
 }

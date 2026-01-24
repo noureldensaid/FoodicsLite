@@ -19,7 +19,6 @@ fun NavGraphBuilder.tablesNavGraph(
     navController: NavHostController,
     isLoading: (show: Boolean) -> Unit,
     errorFlow: (error: Flow<ResponseState.Error>) -> Unit,
-    onRetry: (() -> Unit) -> Unit
 ) {
     composable<TablesRoute> { backStackEntry ->
 
@@ -32,7 +31,6 @@ fun NavGraphBuilder.tablesNavGraph(
             viewModel = viewModel,
             isLoading = isLoading,
             errorFlow = errorFlow,
-            onRetry = onRetry
         )
     }
 }

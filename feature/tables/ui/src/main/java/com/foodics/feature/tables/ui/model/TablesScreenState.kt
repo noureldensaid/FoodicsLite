@@ -20,9 +20,4 @@ data class TablesScreenState(
 
     val isLoading: Boolean = true,
     val isSyncing: Boolean = false,
-
-    // “View Order” preview (because DB will be cleared after click)
-    val showOrderPreview: Boolean = false,
-    val orderPreviewItems: PersistentList<Product> = persistentListOf(),
-    val orderPreviewSummary: CartSummary = CartSummary(totalQty = 0, totalPrice = 0.0)
 )

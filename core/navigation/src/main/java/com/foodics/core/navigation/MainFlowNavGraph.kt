@@ -20,7 +20,6 @@ internal fun NavGraphBuilder.mainFlowNavigation(
     navController: NavHostController,
     isLoading: (show: Boolean) -> Unit,
     errorFlow: (error: Flow<ResponseState.Error>) -> Unit,
-    onRetry: (() -> Unit) -> Unit
 ) {
     navigation<MainFlow>(TablesRoute) {
 
@@ -28,7 +27,6 @@ internal fun NavGraphBuilder.mainFlowNavigation(
             navController = navController,
             isLoading = isLoading,
             errorFlow = errorFlow,
-            onRetry = onRetry
         )
 
         menuNavGraph()

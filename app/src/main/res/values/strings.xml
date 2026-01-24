@@ -1,4 +1,6 @@
 <resources>
     <string name="app_name">Foodics Lite</string>
     <string name="ok">OK</string>
+    <string name="you_re_offline">You\'re offline</string>
+    <string name="you_re_back_online">You\'re back online</string>
 </resources>

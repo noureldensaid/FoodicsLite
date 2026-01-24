@@ -1,6 +1,9 @@
 package com.foodics.feature.tables.ui.screen
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -87,12 +90,20 @@ fun TableScreenRoot(
         containerColor = MaterialTheme.colorScheme.background,
         topBar = { TablesTopBar(isSyncing = state.isSyncing) },
         bottomBar = {
-            AnimatedVisibility(visible = state.cartSummary.totalQty > 0) {
+            AnimatedVisibility(
+                visible = state.cartSummary.totalQty > 0,
+                enter = slideInHorizontally(),
+                exit = slideOutHorizontally(
+                    animationSpec = tween(300),
+                    targetOffsetX = { fullWidth -> fullWidth }
+                ),
+            ) {
                 ViewOrderBar(
                     modifier = Modifier.padding(
                         start = 12.dp,
                         end = 12.dp,
-                        bottom = 50.dp + NavigationBarDefaults.windowInsets.asPaddingValues()
+                        bottom = 50.dp + NavigationBarDefaults.windowInsets
+                            .asPaddingValues()
                             .calculateBottomPadding()
                     ),
                     qty = state.cartSummary.totalQty,
@@ -226,7 +237,6 @@ private fun TablesScreenPreview_WithCartBar() {
             state = TablesScreenState(
                 isLoading = false,
                 isSyncing = false,
-                showOrderPreview = true,
                 cartSummary = CartSummary(
                     totalQty = 5,
                     totalPrice = 1234.0

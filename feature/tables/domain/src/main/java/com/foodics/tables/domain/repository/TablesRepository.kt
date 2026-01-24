@@ -24,6 +24,4 @@ interface TablesRepository {
     suspend fun addProduct(productId: String)
     suspend fun clearCart()
 
-    // For "View Order" details
-    suspend fun getOrderedProducts(): List<Product>
 }

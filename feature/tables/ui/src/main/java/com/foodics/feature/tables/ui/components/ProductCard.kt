@@ -1,6 +1,5 @@
 package com.foodics.feature.tables.ui.components
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -43,7 +42,7 @@ fun ProductCard(
 ) {
     BadgedBox(
         badge = {
-            AnimatedVisibility(product.quantity > 0) {
+            if (product.quantity > 0) {
                 Box(
                     modifier = Modifier
                         .clip(CircleShape)

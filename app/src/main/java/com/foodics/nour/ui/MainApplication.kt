@@ -1,9 +1,10 @@
-package com.foodics.nour
+package com.foodics.nour.ui
 
 import android.app.Application
 import com.foodics.core.di.databaseModule
 import com.foodics.core.di.networkModule
 import com.foodics.feature.tables.ui.di.tablesUiModule
+import com.foodics.nour.di.mainAppModule
 import com.foodics.tables.data.di.tablesDataModule
 import com.foodics.tables.domain.di.tablesDomainModule
 import org.koin.android.ext.koin.androidContext
@@ -21,6 +22,7 @@ class MainApplication : Application() {
             modules(
                 networkModule,
                 databaseModule,
+                mainAppModule,
 
                 // tables feature modules
                 tablesDataModule,
