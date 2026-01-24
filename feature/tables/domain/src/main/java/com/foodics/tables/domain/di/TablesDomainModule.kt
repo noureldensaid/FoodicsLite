@@ -2,7 +2,6 @@ package com.foodics.tables.domain.di
 
 import com.foodics.tables.domain.usecase.AddProductUseCase
 import com.foodics.tables.domain.usecase.ClearCartUseCase
-import com.foodics.tables.domain.usecase.GetOrderedProductsUseCase
 import com.foodics.tables.domain.usecase.ObserveCartSummaryUseCase
 import com.foodics.tables.domain.usecase.ObserveCategoriesUseCase
 import com.foodics.tables.domain.usecase.ObserveProductsUseCase
@@ -22,5 +21,4 @@ val tablesDomainModule = module {
 
     factoryOf(::AddProductUseCase)
     factoryOf(::ClearCartUseCase)
-    factoryOf(::GetOrderedProductsUseCase)
 }

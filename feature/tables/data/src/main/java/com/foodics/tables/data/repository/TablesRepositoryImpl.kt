@@ -51,10 +51,6 @@ class TablesRepositoryImpl(
         productDao.clearCart()
     }
 
-    override suspend fun getOrderedProducts(): List<Product> {
-        return productDao.getOrderedProducts().map { productEntityToDomain.map(it) }
-    }
-
     override suspend fun syncCategories(): ResponseState<List<Category>> {
         return when (val remoteCategories = remote.getCategories()) {
             is ResponseState.Error -> ResponseState.Error(

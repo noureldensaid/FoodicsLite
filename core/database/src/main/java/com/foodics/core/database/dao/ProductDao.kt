@@ -48,7 +48,4 @@ interface ProductDao {
     """)
     fun observeCartSummary(): Flow<CartSummaryDb>
 
-    @Query("SELECT * FROM products WHERE quantity > 0 ORDER BY name ASC")
-    suspend fun getOrderedProducts(): List<ProductEntity>
-
 }
