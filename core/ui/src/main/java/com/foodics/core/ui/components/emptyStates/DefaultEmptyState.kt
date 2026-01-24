@@ -3,7 +3,6 @@ package com.foodics.core.ui.components.emptyStates
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -38,8 +37,7 @@ fun DefaultEmptyState(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .wrapContentSize()
-            .background(MaterialTheme.colorScheme.background),
+            .wrapContentSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {

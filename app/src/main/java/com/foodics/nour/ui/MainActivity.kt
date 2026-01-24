@@ -12,7 +12,6 @@ import com.foodics.core.ui.theme.FoodicsLiteTheme
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         enableEdgeToEdge(
             navigationBarStyle = SystemBarStyle.light(
                 Color.Transparent.toArgb(),
