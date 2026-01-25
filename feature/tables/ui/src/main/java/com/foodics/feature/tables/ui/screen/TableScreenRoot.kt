@@ -21,6 +21,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
@@ -69,6 +71,8 @@ fun TableScreenRoot(
     val pullToRefreshState = rememberPullToRefreshState()
 
     val lazyRowState = rememberLazyListState()
+
+    val scrollState = rememberScrollState()
 
     val pagerState = rememberPagerState(
         initialPage = selectedTabIndex,
@@ -218,6 +222,10 @@ fun TableScreenRoot(
                         )
                     }
                 }
+            } else {
+                Box(Modifier
+                    .fillMaxSize()
+                    .verticalScroll(scrollState))
             }
             }
         }
