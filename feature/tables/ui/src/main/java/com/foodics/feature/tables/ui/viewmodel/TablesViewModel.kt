@@ -15,7 +15,6 @@ import com.foodics.tables.domain.usecase.ObserveProductsUseCase
 import com.foodics.tables.domain.usecase.SyncCategoriesUseCase
 import com.foodics.tables.domain.usecase.SyncProductsForCategoryUseCase
 import kotlinx.collections.immutable.toPersistentList
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -125,7 +124,6 @@ class TablesViewModel(
         }
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     private fun observeProducts() {
         viewModelScope.launch {
             state

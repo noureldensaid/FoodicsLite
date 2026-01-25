@@ -100,12 +100,12 @@ fun MainScreen() {
     }
 
     ObserveAsEvents(flow = errorFlow) { error ->
+        val errorMessage = if (error.error == NetworkError.NO_INTERNET_CONNECTION) context.getString(R.string.you_re_offline) else error.errorBody?.message
         when (error.error) {
-            NetworkError.NO_INTERNET_CONNECTION -> Unit
             else -> scope.launch {
                 SnackbarController.sendEvent(
                     event = SnackbarAction.SendEvent(
-                        name = error.errorBody?.message ?: error.error.toString(),
+                        name = errorMessage ?: error.error.toString(),
                         label = context.getString(R.string.ok)
                     )
                 )

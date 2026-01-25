@@ -1,5 +1,6 @@
 package com.foodics.feature.tables.ui.components
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -9,6 +10,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
@@ -48,6 +50,7 @@ fun TablesTopBar(
     Column(
         modifier = modifier
             .fillMaxWidth()
+            .height(120.dp)
             .padding(horizontal = 8.dp),
         verticalArrangement = Arrangement.Center
     ) {
@@ -90,13 +93,15 @@ fun TablesTopBar(
                 )
             }
         }
-        LinearProgressIndicator(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 8.dp),
-            trackColor = if (isSyncing) MaterialTheme.colorScheme.surfaceVariant else Color.Transparent,
-            color = if (isSyncing) MaterialTheme.colorScheme.primary else Color.Transparent,
-        )
+        AnimatedVisibility (
+            visible = isSyncing
+        ) {
+            LinearProgressIndicator(
+                modifier=Modifier.fillMaxWidth(),
+                trackColor = MaterialTheme.colorScheme.surfaceVariant,
+                color = MaterialTheme.colorScheme.primary
+            )
+        }
         TopAppBar(
             colors = TopAppBarDefaults.topAppBarColors(
                 containerColor = Color.Transparent
