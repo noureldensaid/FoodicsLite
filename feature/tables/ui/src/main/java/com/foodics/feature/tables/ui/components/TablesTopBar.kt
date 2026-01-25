@@ -39,6 +39,7 @@ import com.foodics.core.ui.components.icons.BackIcon
 import com.foodics.core.ui.components.text.DefaultText
 import com.foodics.core.ui.theme.FoodicsLiteTheme
 import com.foodics.core.ui.theme.green
+import com.foodics.core.ui.theme.red
 import kotlin.random.Random
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -46,6 +47,7 @@ import kotlin.random.Random
 fun TablesTopBar(
     modifier: Modifier = Modifier,
     isSyncing: Boolean,
+    isOnline: Boolean,
 ) {
     Column(
         modifier = modifier
@@ -89,7 +91,7 @@ fun TablesTopBar(
                     modifier = Modifier
                         .clip(CircleShape)
                         .size(16.dp)
-                        .background(green)
+                        .background(if (isOnline) green else red)
                 )
             }
         }
@@ -151,7 +153,7 @@ fun TablesTopBar(
 @Composable
 fun TablesTopBarPreview() {
     FoodicsLiteTheme {
-        TablesTopBar(isSyncing = false)
+        TablesTopBar(isSyncing = false, isOnline = false)
     }
 }
 
@@ -159,6 +161,6 @@ fun TablesTopBarPreview() {
 @Composable
 fun TablesTopBarSyncingPreview() {
     FoodicsLiteTheme {
-        TablesTopBar(isSyncing = true)
+        TablesTopBar(isSyncing = true, isOnline = true)
     }
 }

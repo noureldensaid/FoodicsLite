@@ -4,6 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.foodics.core.common.result.ResponseState
+import com.foodics.core.util.connectivityObserver.ConnectivityObserver
 import com.foodics.feature.tables.ui.model.TablesScreenEvent
 import com.foodics.feature.tables.ui.model.TablesScreenState
 import com.foodics.tables.domain.model.CartSummary
@@ -36,6 +37,7 @@ class TablesViewModel(
     private val syncProductsForCategoryUseCase: SyncProductsForCategoryUseCase,
     private val addProductUseCase: AddProductUseCase,
     private val clearCartUseCase: ClearCartUseCase,
+    private val connectivityObserver: ConnectivityObserver,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -45,6 +47,8 @@ class TablesViewModel(
     private var hasInitialDataLoaded = false
     private var didSetDefaultCategory = false
     private var didSyncDefaultCategoryProducts = false
+
+    val isDeviceOnline = connectivityObserver.isConnected
 
     private val _state = MutableStateFlow(TablesScreenState())
     val state = _state.asStateFlow()
@@ -59,11 +63,16 @@ class TablesViewModel(
     fun onEvent(event: TablesScreenEvent) {
         when (event) {
             TablesScreenEvent.LoadInitialData -> loadInitialData()
+            TablesScreenEvent.OnViewOrderClicked -> onViewOrderClicked()
             is TablesScreenEvent.OnCategorySelected -> onCategorySelected(event.categoryId)
             is TablesScreenEvent.OnSearchQueryChanged -> onSearchQueryChanged(event.query)
             is TablesScreenEvent.OnProductClicked -> onProductClicked(event.productId)
-            TablesScreenEvent.OnViewOrderClicked -> onViewOrderClicked()
+            is TablesScreenEvent.UpdateNetworkState -> isOnline(event.isOnline)
         }
+    }
+
+    private fun isOnline(isOnline: Boolean) {
+        _state.update { it.copy(isOnline = isOnline) }
     }
 
     private fun loadInitialData() {

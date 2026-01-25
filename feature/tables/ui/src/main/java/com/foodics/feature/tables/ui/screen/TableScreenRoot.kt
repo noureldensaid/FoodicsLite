@@ -8,11 +8,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
@@ -24,8 +21,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
@@ -75,8 +70,6 @@ fun TableScreenRoot(
 
     val lazyRowState = rememberLazyListState()
 
-    val scrollState = rememberScrollState()
-
     val pagerState = rememberPagerState(
         initialPage = selectedTabIndex,
         pageCount = { state.categories.size }
@@ -96,7 +89,7 @@ fun TableScreenRoot(
             .fillMaxSize()
             .padding(),
         containerColor = MaterialTheme.colorScheme.background,
-        topBar = { TablesTopBar(isSyncing = state.isSyncing) },
+        topBar = { TablesTopBar(isSyncing = state.isSyncing, isOnline = state.isOnline) },
     ) { padding ->
         PullToRefreshBox(
             state = pullToRefreshState,
@@ -159,11 +152,7 @@ fun TableScreenRoot(
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
-                        .background(MaterialTheme.colorScheme.surfaceContainer)
-                        .padding(
-                            bottom = WindowInsets.navigationBars.asPaddingValues()
-                                .calculateBottomPadding()
-                        ),
+                        .background(MaterialTheme.colorScheme.surfaceContainer),
                     contentAlignment = Alignment.BottomCenter
                 ) {
                     HorizontalPager(
@@ -188,7 +177,7 @@ fun TableScreenRoot(
                                     ProductCardLoadingShimmer(modifier = Modifier.size(150.dp))
                                 }
 
-                                state.products.isEmpty() && state.searchQuery.isNotBlank() -> item(
+                                state.products.isEmpty() -> item(
                                     span = { GridItemSpan(maxLineSpan) }) {
                                     DefaultEmptyState()
                                 }
@@ -221,7 +210,7 @@ fun TableScreenRoot(
                                 .padding(
                                     start = 12.dp,
                                     end = 12.dp,
-                                    bottom = 40.dp
+                                    bottom = 55.dp
                                 ),
                             qty = state.cartSummary.totalQty,
                             totalPrice = state.cartSummary.totalPrice,
@@ -229,22 +218,13 @@ fun TableScreenRoot(
                         )
                     }
                 }
-            } else {
-                Box(
-                    modifier = Modifier
-                        .weight(1f)
-                        .verticalScroll(scrollState),
-                    contentAlignment = Alignment.Center
-                ) {
-                    if (state.isLoading.not()) DefaultEmptyState()
-                }
             }
             }
         }
     }
 }
 
-@Preview(name = "Tables - With Products + Cart")
+@Preview(name = "Tables - With Products + Cart", device = "id:pixel_tablet")
 @Composable
 private fun TableScreenRootPreview_WithProductsAndCart() {
     MaterialTheme {

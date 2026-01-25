@@ -17,4 +17,5 @@ data class TablesScreenState(
     val cartSummary: CartSummary = CartSummary(totalQty = 0, totalPrice = 0.0),
     val isLoading: Boolean = true,
     val isSyncing: Boolean = false,
+    val isOnline: Boolean = false
 )

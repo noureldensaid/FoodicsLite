@@ -4,6 +4,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.foodics.core.common.result.ResponseState
+import com.foodics.core.common.util.ObserveAsEvents
+import com.foodics.feature.tables.ui.model.TablesScreenEvent
 import com.foodics.feature.tables.ui.viewmodel.TablesViewModel
 import kotlinx.coroutines.flow.Flow
 
@@ -17,6 +19,12 @@ fun TablesScreen(
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     errorFlow(viewModel.errorFlow)
+
+    ObserveAsEvents(viewModel.isDeviceOnline) { isConnected ->
+        isConnected?.let {
+            viewModel.onEvent(TablesScreenEvent.UpdateNetworkState(it))
+        }
+    }
 
     TableScreenRoot(
         state = state,

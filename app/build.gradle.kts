@@ -82,7 +82,7 @@ dependencies {
     releaseImplementation(libs.library.no.op)
 
     implementation(libs.kotlinx.serialization)
-
+    implementation(libs.androidx.core.splashscreen)
 
     implementation(project(":core:ui"))
     implementation(project(":core:common"))
