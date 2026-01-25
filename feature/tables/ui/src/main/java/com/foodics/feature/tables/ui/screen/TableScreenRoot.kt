@@ -24,6 +24,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
@@ -73,6 +75,8 @@ fun TableScreenRoot(
 
     val lazyRowState = rememberLazyListState()
 
+    val scrollState = rememberScrollState()
+
     val pagerState = rememberPagerState(
         initialPage = selectedTabIndex,
         pageCount = { state.categories.size }
@@ -88,7 +92,9 @@ fun TableScreenRoot(
     }
 
     Scaffold(
-        modifier = modifier.fillMaxSize(),
+        modifier = modifier
+            .fillMaxSize()
+            .padding(),
         containerColor = MaterialTheme.colorScheme.background,
         topBar = { TablesTopBar(isSyncing = state.isSyncing) },
     ) { padding ->
@@ -222,6 +228,15 @@ fun TableScreenRoot(
                             onClick = { onEvent(TablesScreenEvent.OnViewOrderClicked) }
                         )
                     }
+                }
+            } else {
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .verticalScroll(scrollState),
+                    contentAlignment = Alignment.Center
+                ) {
+                    if (state.isLoading.not()) DefaultEmptyState()
                 }
             }
             }
