@@ -2,7 +2,7 @@ package com.foodics.core.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val primaryLight = Color(0xFF450697)
+val primaryLight = Color(0xFF5830C5)
 val onPrimaryLight = Color(0xFFFFFFFF)
 val primaryContainerLight = Color(0xFF78C4DD)
 val onPrimaryContainerLight = Color(0xFF005163)
