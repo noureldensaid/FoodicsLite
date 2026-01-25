@@ -69,3 +69,18 @@ The app consumes the following data structure:
   "image": "URL String",
   "price": 0.0
 }
+```
+**Screenshots
+
+<img width="2798" height="1837" alt="Screenshot_20260125_210319" src="https://github.com/user-attachments/assets/866bcbcf-fc24-423c-a91e-b09636f6d2c8" />
+<img width="300"  alt="image" src="https://github.com/user-attachments/assets/b2facc06-a144-4089-adb7-e7d83c5219c0" />
+<img width="1080" height="2340" alt="image" src="https://github.com/user-attachments/assets/b69cc71e-f1ce-4da6-be57-52de735f874d" />
+<img width="1080" height="2340" alt="image" src="https://github.com/user-attachments/assets/d2e7577a-46a2-4554-aced-3af839d71f1c" />
+<img width="1080" height="2340" alt="image" src="https://github.com/user-attachments/assets/83a4f7b5-5ff6-476e-b289-31e24d8437f5" />
+<img width="1080" height="2340" alt="image" src="https://github.com/user-attachments/assets/70d43060-c670-4240-95a1-2325701b334d" />
+<img width="1080" height="2340" alt="image" src="https://github.com/user-attachments/assets/a3e89d7b-3dce-4940-8d8b-0762fc118dc4" />
+<img width="1080" height="2340" alt="image" src="https://github.com/user-attachments/assets/bdabaf98-7fcf-4b6b-a381-6c9a1b65358f" />
+
+
+
+
