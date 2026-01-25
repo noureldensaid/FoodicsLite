@@ -10,6 +10,8 @@ This project adopts a **Layered Multi-Module Architecture** to ensure separation
 
 ### Module Structure
 * **:app** - The entry point and DI graph orchestration.
+* **:network** - Ktor client
+* **:database** - Room database
 * **:core** - Common utility classes and extensions.
 * **:data** - Repositories, API implementation (Ktor), and Local Storage (Room).
 * **:domain** - Use cases, interface definitions, and pure business logic.
