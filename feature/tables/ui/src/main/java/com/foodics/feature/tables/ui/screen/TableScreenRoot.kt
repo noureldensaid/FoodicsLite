@@ -170,7 +170,7 @@ fun TableScreenRoot(
                                 if (state.products.isEmpty()) Alignment.CenterVertically else Alignment.Top
                             ),
                             columns = GridCells.Adaptive(100.dp),
-                            contentPadding = PaddingValues(top = 12.dp, bottom = 100.dp)
+                            contentPadding = PaddingValues(top = 12.dp, bottom = 120.dp)
                         ) {
                             when {
                                 state.products.isEmpty() && state.isSyncing -> items(10) {
@@ -224,7 +224,7 @@ fun TableScreenRoot(
     }
 }
 
-@Preview(name = "Tables - With Products + Cart", device = "id:pixel_tablet")
+@Preview(name = "Tables - With Products + Cart")
 @Composable
 private fun TableScreenRootPreview_WithProductsAndCart() {
     MaterialTheme {
