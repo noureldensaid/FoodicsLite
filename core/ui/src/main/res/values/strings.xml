@@ -1,0 +1,9 @@
+<resources>
+    <string name="ok">OK</string>
+    <string name="Search_for_product">Search for products or categories</string>
+    <string name="try_again">Try again</string>
+    <string name="no_products_was_found">No products was found</string>
+    <string name="no_products_was_found_details">Try searching for something else or check back later.</string>
+    <string name="no_internet">No internet connection</string>
+    <string name="no_internet_details">Looks like your internet is on a coffee break!\nCheck your connection and try again.</string>
+</resources>
