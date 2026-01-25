@@ -58,3 +58,14 @@ The app consumes the following data structure:
   "id": "String",
   "name": "String"
 }
+```
+**Products Endpoint**
+```json
+{
+  "id": "String",
+  "category": { "id": "String", "name": "String" },
+  "name": "String",
+  "description": "String",
+  "image": "URL String",
+  "price": 0.0
+}
