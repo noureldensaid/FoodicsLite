@@ -21,7 +21,8 @@ interface TablesRepository {
     suspend fun syncCategories(): ResponseState<List<Category>>
     suspend fun syncProductsForCategory(categoryId: String): ResponseState<Unit>
 
-    suspend fun addProduct(productId: String)
-    suspend fun clearCart()
+    suspend fun addProduct(productId: String): ResponseState<Unit>
+
+    suspend fun clearCart(): ResponseState<Unit>
 
 }

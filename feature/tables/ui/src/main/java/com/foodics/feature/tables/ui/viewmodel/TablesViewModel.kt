@@ -4,8 +4,6 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.foodics.core.common.result.ResponseState
-import com.foodics.core.common.result.StatusJsonResponse
-import com.foodics.core.database.DatabaseError
 import com.foodics.feature.tables.ui.model.TablesScreenEvent
 import com.foodics.feature.tables.ui.model.TablesScreenState
 import com.foodics.tables.domain.model.CartSummary
@@ -171,40 +169,22 @@ class TablesViewModel(
 
     private fun onProductClicked(productId: String) {
         viewModelScope.launch {
-            runCatching { addProductUseCase(productId) }
-                .onFailure {
-                    _errorFlow.send(
-                        ResponseState.Error(
-                            error = DatabaseError.QUERY_FAILED,
-                            errorBody = StatusJsonResponse(
-                                message = it.message,
-                                code = -1
-                            ),
-                        )
-                    )
-                }
+            val result = addProductUseCase(productId)
+            if (result is ResponseState.Error) {
+                _errorFlow.send(result)
+            }
         }
     }
 
-
     private fun onViewOrderClicked() {
         viewModelScope.launch {
-            runCatching { clearCartUseCase() }
-                .onFailure {
-                    _errorFlow.send(
-                        ResponseState.Error(
-                            error = DatabaseError.DELETE_FAILED,
-                            errorBody = StatusJsonResponse(
-                                message = it.message,
-                                code = -1
-                            ),
-                        )
+            when (val result = clearCartUseCase()) {
+                is ResponseState.Error -> _errorFlow.send(result)
+                is ResponseState.Success -> _state.update {
+                    it.copy(
+                        cartSummary = CartSummary(totalQty = 0, totalPrice = 0.0),
                     )
                 }
-            _state.update {
-                it.copy(
-                    cartSummary = CartSummary(totalQty = 0, totalPrice = 0.0),
-                )
             }
         }
     }

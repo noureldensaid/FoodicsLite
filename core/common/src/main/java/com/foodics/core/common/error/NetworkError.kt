@@ -1,4 +1,4 @@
-package com.foodics.core.network
+package com.foodics.core.common.error
 
 import com.foodics.core.common.base.BaseError
 
