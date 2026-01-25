@@ -1,5 +1,6 @@
 package com.foodics.core.network
 
+import com.foodics.core.common.error.NetworkError
 import com.foodics.core.common.result.ResponseState
 import com.foodics.core.common.result.StatusJsonResponse
 import io.ktor.client.call.body

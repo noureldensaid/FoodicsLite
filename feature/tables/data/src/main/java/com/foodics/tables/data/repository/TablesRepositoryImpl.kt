@@ -6,6 +6,7 @@ import com.foodics.core.common.result.ResponseState
 import com.foodics.core.database.AppDatabase
 import com.foodics.core.database.dao.CategoryDao
 import com.foodics.core.database.dao.ProductDao
+import com.foodics.core.database.dbCall
 import com.foodics.tables.data.mapper.CartSummaryDbToDomainMapper
 import com.foodics.tables.data.mapper.CategoryEntityToDomainMapper
 import com.foodics.tables.data.mapper.CategoryRemoteToEntityMapper
@@ -43,13 +44,9 @@ class TablesRepositoryImpl(
         productDao.observeCartSummary()
             .map { cartSummaryDbToDomain.map(it) }
 
-    override suspend fun addProduct(productId: String) {
-        productDao.incrementQty(productId)
-    }
+    override suspend fun addProduct(productId: String) = dbCall { productDao.incrementQty(productId) }
 
-    override suspend fun clearCart() {
-        productDao.clearCart()
-    }
+    override suspend fun clearCart(): ResponseState<Unit> = dbCall { productDao.clearCart() }
 
     override suspend fun syncCategories(): ResponseState<List<Category>> {
         return when (val remoteCategories = remote.getCategories()) {

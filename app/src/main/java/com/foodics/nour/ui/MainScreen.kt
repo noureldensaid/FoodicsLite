@@ -38,6 +38,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.foodics.core.common.error.NetworkError
 import com.foodics.core.common.result.ResponseState
 import com.foodics.core.common.util.ObserveAsEvents
 import com.foodics.core.common.util.SnackbarAction
@@ -45,7 +46,6 @@ import com.foodics.core.common.util.SnackbarController
 import com.foodics.core.navigation.AppNavGraph
 import com.foodics.core.navigation.BottomAppBar
 import com.foodics.core.navigation.BottomAppBarItem
-import com.foodics.core.network.NetworkError
 import com.foodics.core.ui.components.loading.DefaultLoadingComponent
 import com.foodics.core.ui.components.snackBar.DefaultSnackbar
 import com.foodics.core.ui.components.text.DefaultText

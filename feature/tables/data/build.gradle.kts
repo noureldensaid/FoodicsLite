@@ -59,6 +59,19 @@ dependencies {
     implementation(libs.bundles.room)
     ksp(libs.androidx.room.compiler)
 
+    // Mocking
+    testImplementation("io.mockk:mockk:1.14.7")
+
+    // Coroutines test
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.10.2")
+
+    // Truth assertions
+    testImplementation("com.google.truth:truth:1.4.5")
+
+    // Turbine for Flow testing
+    testImplementation("app.cash.turbine:turbine:1.2.1")
+
+
     implementation(project(":core:common"))
     implementation(project(":core:network"))
     implementation(project(":core:database"))
