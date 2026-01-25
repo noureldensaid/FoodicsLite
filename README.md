@@ -15,7 +15,8 @@ This project adopts a **Layered Multi-Module Architecture** to ensure separation
 * **:core** - Common utility classes and extensions.
 * **:data** - Repositories, API implementation (Ktor), and Local Storage (Room).
 * **:domain** - Use cases, interface definitions, and pure business logic.
-* **:presentation** - UI screens (Jetpack Compose) and ViewModels.
+* **:ui** - UI screens (Jetpack Compose) and ViewModels.
+* **:common** - for common shared utilities 
 
 ## 🛠️ Tech Stack
 
