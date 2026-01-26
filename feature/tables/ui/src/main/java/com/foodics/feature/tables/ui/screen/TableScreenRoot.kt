@@ -181,7 +181,7 @@ fun TableScreenRoot(
                                     ProductCardLoadingShimmer(modifier = Modifier.size(150.dp))
                                 }
 
-                                state.products.isEmpty() -> item(
+                                state.products.isEmpty()  -> item(
                                     span = { GridItemSpan(maxLineSpan) }) {
                                     DefaultEmptyState()
                                 }

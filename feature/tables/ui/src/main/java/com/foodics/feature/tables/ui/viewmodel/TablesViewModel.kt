@@ -50,7 +50,16 @@ class TablesViewModel(
 
     val isDeviceOnline = connectivityObserver.isConnected
 
-    private val _state = MutableStateFlow(TablesScreenState())
+
+    private val selectedCategoryId: String? = savedStateHandle[KEY_SELECTED_CATEGORY_ID]
+    private val searchQuery: String? = savedStateHandle[KEY_SEARCH_QUERY]
+
+    private val _state = MutableStateFlow(
+        TablesScreenState(
+            selectedCategoryId = selectedCategoryId,
+            searchQuery = searchQuery.orEmpty()
+        )
+    )
     val state = _state.asStateFlow()
         .onStart {
             if (!hasInitialDataLoaded) {
@@ -59,6 +68,7 @@ class TablesViewModel(
             }
         }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), _state.value)
+
 
     fun onEvent(event: TablesScreenEvent) {
         when (event) {
@@ -117,8 +127,8 @@ class TablesViewModel(
                 }
 
                 val selectedId = _state.value.selectedCategoryId
-                if (!didSyncDefaultCategoryProducts && selectedId != null && list.isNotEmpty()) {
-                    didSyncDefaultCategoryProducts = true
+                selectedId?.let {
+                    savedStateHandle[KEY_SELECTED_CATEGORY_ID] = selectedId
                     onCategorySelected(selectedId)
                 }
             }
@@ -151,6 +161,7 @@ class TablesViewModel(
         viewModelScope.launch {
             if (_state.value.selectedCategoryId == categoryId && _state.value.products.isNotEmpty()) {
                 _state.update { it.copy(selectedCategoryId = categoryId) }
+                savedStateHandle[KEY_SELECTED_CATEGORY_ID] = categoryId
                 return@launch
             }
 
@@ -162,6 +173,9 @@ class TablesViewModel(
                 )
             }
 
+            savedStateHandle[KEY_SELECTED_CATEGORY_ID] = categoryId
+            savedStateHandle[KEY_SEARCH_QUERY] = ""
+
             when (val response = syncProductsForCategoryUseCase(categoryId)) {
                 is ResponseState.Success -> Unit
                 is ResponseState.Error -> _errorFlow.send(response)
@@ -172,6 +186,7 @@ class TablesViewModel(
 
     private fun onSearchQueryChanged(query: String) {
         _state.update { it.copy(searchQuery = query) }
+        savedStateHandle[KEY_SEARCH_QUERY] = query
     }
 
     private fun onProductClicked(productId: String) {
@@ -194,5 +209,10 @@ class TablesViewModel(
                 }
             }
         }
+    }
+
+    private companion object {
+        const val KEY_SELECTED_CATEGORY_ID = "selectedCategoryId"
+        const val KEY_SEARCH_QUERY = "searchQuery"
     }
 }
