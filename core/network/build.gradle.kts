@@ -21,7 +21,7 @@ android {
 
         defaultConfig {
             buildConfigField("String", "BASE_URL", "\"https://my.api.mockaroo.com/\"")
-            buildConfigField("String", "API_KEY", "\"28085ae0\"")
+            buildConfigField("String", "API_KEY", "\"346ca9b0\"")
         }
     }
 
